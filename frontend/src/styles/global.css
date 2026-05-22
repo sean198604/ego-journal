@@ -1,0 +1,197 @@
+/* ============================================
+   EGO Journal 全局样式 — 与文化积分系统(7006)风格统一
+   主色调: #4f6ef7 / 背景: #f4f7fb
+   ============================================ */
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg-primary: #f4f7fb;
+  --bg-secondary: #ffffff;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f8fafc;
+  --border-color: #e8ecf2;
+  --text-primary: #0f172a;
+  --text-secondary: #64748b;
+  --text-muted: #94a3b8;
+  --accent-blue: #4f6ef7;
+  --accent-blue-hover: #3b5de7;
+  --accent-cyan: #06b6d4;
+  --accent-gold: #f59e0b;
+  --accent-green: #10b981;
+  --accent-red: #ef4444;
+  --accent-purple: #8b5cf6;
+  --gradient-accent: linear-gradient(135deg, #4f6ef7, #818cf8);
+  --gradient-warm: linear-gradient(135deg, #f59e0b, #fbbf24);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.06);
+  --shadow-lg: 0 12px 40px rgba(0,0,0,0.08);
+  --radius: 16px;
+  --radius-sm: 10px;
+  --radius-xs: 6px;
+}
+
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: "PingFang SC", "Microsoft YaHei", "方正悠黑简体", sans-serif;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ============ AntD 亮色覆盖 ============ */
+.ant-layout { background: transparent !important; }
+.ant-layout-sider { background: var(--bg-secondary) !important; border-right: 1px solid var(--border-color) !important; }
+.ant-menu { background: transparent !important; }
+.ant-menu-item-selected { background: rgba(79,110,247,0.08) !important; color: var(--accent-blue) !important; }
+.ant-menu-item:hover { background: rgba(79,110,247,0.04) !important; }
+.ant-layout-header { background: rgba(255,255,255,0.92) !important; border-bottom: 1px solid var(--border-color) !important; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+
+/* ============ 卡片组件 ============ */
+.journal-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  cursor: pointer;
+  position: relative;
+}
+.journal-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lg);
+  border-color: transparent;
+}
+.journal-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--gradient-accent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.journal-card:hover::after { opacity: 1; }
+
+/* ============ 文章卡片 ============ */
+.article-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 20px;
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
+.article-card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--accent-blue);
+  transform: translateY(-2px);
+}
+
+/* ============ 栏目标签 ============ */
+.category-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* ============ 玻璃效果 Header ============ */
+.glass-header {
+  background: rgba(255,255,255,0.92) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ============ 徽章/标签 ============ */
+.issue-badge {
+  display: inline-block;
+  background: var(--gradient-accent);
+  color: #fff;
+  padding: 3px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.featured-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: linear-gradient(135deg, #f59e0b, #fbbf24);
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* ============ AntD 组件覆盖 ============ */
+.ant-table { background: var(--bg-card) !important; color: var(--text-primary) !important; }
+.ant-table-thead > tr > th { background: #f8fafc !important; color: var(--text-secondary) !important; border-bottom: 1px solid var(--border-color) !important; font-weight: 600 !important; }
+.ant-table-tbody > tr > td { border-bottom: 1px solid var(--border-color) !important; color: var(--text-primary) !important; }
+.ant-table-tbody > tr:hover > td { background: var(--bg-card-hover) !important; }
+.ant-pagination-item { background: var(--bg-card) !important; border-color: var(--border-color) !important; }
+.ant-pagination-item a { color: var(--text-secondary) !important; }
+.ant-pagination-item-active { border-color: var(--accent-blue) !important; }
+.ant-pagination-item-active a { color: var(--accent-blue) !important; }
+
+.ant-input, .ant-select-selector, .ant-picker { background: #f8fafc !important; border-color: var(--border-color) !important; color: var(--text-primary) !important; }
+.ant-input:focus, .ant-input-focused { border-color: var(--accent-blue) !important; box-shadow: 0 0 0 3px rgba(79,110,247,0.12) !important; }
+.ant-form-item-label > label { color: var(--text-secondary) !important; }
+
+.ant-modal-content { background: var(--bg-card) !important; }
+.ant-modal-header { background: var(--bg-card) !important; border-bottom: 1px solid var(--border-color) !important; }
+.ant-modal-title { color: var(--text-primary) !important; }
+
+.ant-select-dropdown { background: #ffffff !important; }
+.ant-select-item { color: var(--text-primary) !important; }
+.ant-select-item-option-selected { background: rgba(79,110,247,0.08) !important; }
+.ant-select-item-option:hover { background: #f8fafc !important; }
+
+.ant-tabs-tab { color: var(--text-secondary) !important; }
+.ant-tabs-tab-active .ant-tabs-tab-btn { color: var(--accent-blue) !important; }
+.ant-tabs-ink-bar { background: var(--accent-blue) !important; }
+
+.ant-card { background: var(--bg-card) !important; border: 1px solid var(--border-color) !important; }
+.ant-card-head { background: transparent !important; border-bottom: 1px solid var(--border-color) !important; color: var(--text-primary) !important; }
+.ant-divider { border-color: var(--border-color) !important; }
+.ant-statistic-title { color: var(--text-secondary) !important; font-size: 13px; }
+.ant-statistic-content-value { color: var(--text-primary) !important; }
+
+/* ============ 封面图占位 ============ */
+.cover-placeholder {
+  background: linear-gradient(135deg, #e8ecf2, #f4f7fb);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  font-size: 40px;
+}
+
+/* ============ 富文本内容渲染 ============ */
+.article-content {
+  line-height: 1.9;
+  font-size: 15px;
+  color: var(--text-primary);
+}
+.article-content h1, .article-content h2, .article-content h3 {
+  margin: 1.5em 0 0.75em;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.article-content p { margin-bottom: 1em; }
+.article-content img { max-width: 100%; border-radius: var(--radius-sm); margin: 1em 0; }
+.article-content blockquote {
+  border-left: 4px solid var(--accent-blue);
+  padding-left: 16px;
+  margin: 1.5em 0;
+  color: var(--text-secondary);
+  font-style: italic;
+}

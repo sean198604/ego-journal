@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+.env
+
+# Node
+node_modules/
+dist/
+.vite/
+
+# Uploads (runtime data)
+uploads/journals/*.jpg
+uploads/journals/*.png
+uploads/journals/*.pdf
+
+# DB
+*.db
+*.sqlite3
+
+# IDE
+.idea/
+.vscode/
+*.swp
