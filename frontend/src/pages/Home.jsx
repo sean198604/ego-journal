@@ -56,7 +56,7 @@ function JournalCoverCard({ journal, index }) {
       )}
 
       {/* 封面区 — 加高，利用信息区压缩出的空间 */}
-      <div style={{
+      <div className="journal-card-cover" style={{
         height: 290, overflow: 'hidden', position: 'relative',
         background: journal.cover_url ? '#f4f7fb' : gradient,
       }}>
@@ -340,8 +340,15 @@ export default function HomePage() {
       </div>
 
       {/* ──── 关于 / 编辑部 / 征稿 三栏入口 ──── */}
-      <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 32px' }}>
-        <div style={{
+      <style>{`
+        @media (max-width: 640px) {
+          .home-content-wrap { padding: 0 12px !important; }
+          .info-card-grid { grid-template-columns: 1fr !important; margin-top: -16px !important; gap: 12px !important; }
+          .journal-card-cover { height: 180px !important; }
+        }
+      `}</style>
+      <div className="home-content-wrap" style={{ maxWidth: 1100, margin: '0 auto', padding: '0 32px' }}>
+        <div className="info-card-grid" style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(3, 1fr)',
           gap: 20,
@@ -370,9 +377,9 @@ export default function HomePage() {
           </div>
 
           {loading ? (
-            <Row gutter={[24, 24]}>
+            <Row gutter={[16, 16]}>
               {[1, 2, 3, 4].map(i => (
-                <Col key={i} xs={24} sm={12} md={8} lg={6}>
+                <Col key={i} xs={12} sm={12} md={8} lg={6}>
                   <Skeleton active style={{ height: 340, borderRadius: 16 }} />
                 </Col>
               ))}
@@ -386,9 +393,9 @@ export default function HomePage() {
               <div style={{ color: '#94a3b8', fontSize: 15 }}>内刊正在精心筹备中，敬请期待</div>
             </div>
           ) : (
-            <Row gutter={[24, 24]}>
+            <Row gutter={[16, 16]}>
               {journals.map((journal, i) => (
-                <Col key={journal.id} xs={24} sm={12} md={8} lg={6}>
+                <Col key={journal.id} xs={12} sm={12} md={8} lg={6}>
                   <JournalCoverCard journal={journal} index={i} />
                 </Col>
               ))}

@@ -46,9 +46,23 @@ export default function AppLayout() {
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
+      {/* 移动端响应式样式 */}
+      <style>{`
+        .nav-label { display: inline; }
+        .nav-subtitle { display: block; }
+        .nav-contribute-text { display: inline; }
+        @media (max-width: 640px) {
+          .nav-label { display: none; }
+          .nav-subtitle { display: none; }
+          .nav-contribute-text { display: none; }
+          .nav-header { padding: 0 12px !important; }
+          .nav-item { padding: 6px 10px !important; }
+        }
+      `}</style>
+
       {/* 顶部导航 */}
       <Header
-        className="glass-header"
+        className="glass-header nav-header"
         style={{
           position: 'sticky', top: 0, zIndex: 100,
           display: 'flex', alignItems: 'center',
@@ -58,28 +72,29 @@ export default function AppLayout() {
       >
         {/* Logo & 品牌 */}
         <div
-          style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}
+          style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer', flexShrink: 0 }}
           onClick={() => navigate('/')}
         >
           <div style={{
             width: 36, height: 36, borderRadius: 10,
             background: 'linear-gradient(135deg, #4f6ef7, #818cf8)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
+            flexShrink: 0,
           }}>
             <ReadOutlined style={{ color: '#fff', fontSize: 18 }} />
           </div>
           <div style={{ lineHeight: 1.2 }}>
-            <div style={{ fontWeight: 800, fontSize: 16, color: '#0f172a', letterSpacing: 1 }}>
+            <div style={{ fontWeight: 800, fontSize: 16, color: '#0f172a', letterSpacing: 1, whiteSpace: 'nowrap' }}>
               众瀚四季
             </div>
-            <div style={{ fontSize: 10, color: '#94a3b8', letterSpacing: 2 }}>
+            <div className="nav-subtitle" style={{ fontSize: 10, color: '#94a3b8', letterSpacing: 2, whiteSpace: 'nowrap' }}>
               EGO ENTERPRISE JOURNAL
             </div>
           </div>
         </div>
 
         {/* 中间导航菜单 */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 2, flexShrink: 0 }}>
           {NAV_ITEMS.map(item => {
             const isActive = item.key === '/'
               ? location.pathname === '/'
@@ -87,6 +102,7 @@ export default function AppLayout() {
             return (
               <div
                 key={item.key}
+                className="nav-item"
                 onClick={() => navigate(item.key)}
                 style={{
                   display: 'flex', alignItems: 'center', gap: 5,
@@ -95,6 +111,7 @@ export default function AppLayout() {
                   color: isActive ? '#4f6ef7' : '#64748b',
                   background: isActive ? 'rgba(79,110,247,0.08)' : 'transparent',
                   transition: 'all 0.2s ease',
+                  whiteSpace: 'nowrap',
                 }}
                 onMouseEnter={e => {
                   if (!isActive) {
@@ -110,23 +127,23 @@ export default function AppLayout() {
                 }}
               >
                 {item.icon}
-                {item.label}
+                <span className="nav-label">{item.label}</span>
               </div>
             )
           })}
         </div>
 
         {/* 右侧用户区 */}
-        <Space size={12}>
+        <Space size={8} style={{ flexShrink: 0 }}>
           {token ? (
             <Dropdown menu={{ items: userMenuItems }} placement="bottomRight">
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', padding: '4px 8px', borderRadius: 8 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer', padding: '4px 8px', borderRadius: 8 }}>
                 <Avatar
                   size={32}
-                  style={{ background: 'linear-gradient(135deg, #4f6ef7, #818cf8)' }}
+                  style={{ background: 'linear-gradient(135deg, #4f6ef7, #818cf8)', flexShrink: 0 }}
                   icon={<UserOutlined />}
                 />
-                <Text style={{ fontSize: 14, color: '#0f172a' }}>{user?.username}</Text>
+                <Text className="nav-label" style={{ fontSize: 14, color: '#0f172a' }}>{user?.username}</Text>
               </div>
             </Dropdown>
           ) : (
@@ -139,7 +156,7 @@ export default function AppLayout() {
                 }}
                 icon={<SendOutlined />}
               >
-                投稿
+                <span className="nav-contribute-text">投稿</span>
               </Button>
               <Button
                 type="primary"

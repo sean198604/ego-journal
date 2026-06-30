@@ -101,7 +101,7 @@ function EditorMemberCard({ member, index, photos }) {
   const memberList = Array.isArray(photos) ? photos : []
   const photo = memberList[index] || null
   return (
-    <Col span={6} key={index}>
+    <Col xs={12} sm={8} md={6} key={index}>
       <div style={{
         background: '#fff',
         border: '1px solid #e8ecf2',
@@ -170,6 +170,13 @@ export default function EditorialPage() {
 
   return (
     <div style={{ background: '#f4f7fb', minHeight: '100vh' }}>
+      <style>{`
+        @media (max-width: 640px) {
+          .editorial-content { padding: 0 12px 48px !important; margin-top: -20px !important; }
+          .editorial-core-card { padding: 20px 16px !important; }
+          .editorial-quote-card { padding: 24px 20px !important; }
+        }
+      `}</style>
       {/* 顶部 Banner */}
       <div style={{
         background: 'linear-gradient(135deg, #064e3b 0%, #059669 50%, #10b981 100%)',
@@ -197,10 +204,10 @@ export default function EditorialPage() {
       </div>
 
       {/* 正文内容 */}
-      <div style={{ maxWidth: 1000, margin: '-40px auto 0', padding: '0 32px 64px', position: 'relative', zIndex: 5 }}>
+      <div className="editorial-content" style={{ maxWidth: 1000, margin: '-40px auto 0', padding: '0 32px 64px', position: 'relative', zIndex: 5 }}>
 
         {/* 核心团队 */}
-        <div style={{
+        <div className="editorial-core-card" style={{
           background: '#fff',
           borderRadius: 20,
           padding: '32px 36px',
@@ -215,7 +222,7 @@ export default function EditorialPage() {
           </div>
           <Row gutter={[16, 16]}>
             {EDITORIAL_TEAM.map(member => (
-              <Col span={8} key={member.role}>
+              <Col xs={24} sm={8} key={member.role}>
                 <MemberCard member={member} />
               </Col>
             ))}
