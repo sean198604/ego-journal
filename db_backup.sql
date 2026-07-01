@@ -16,6 +16,38 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `articles`
+--
+
+DROP TABLE IF EXISTS `articles`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `articles` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `journal_id` int NOT NULL,
+  `category_id` int DEFAULT NULL,
+  `title` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `author` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `department` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `cover_url` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `content` text COLLATE utf8mb4_unicode_ci,
+  `summary` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `sort` int DEFAULT NULL,
+  `is_featured` smallint DEFAULT NULL,
+  `view_count` int DEFAULT NULL,
+  `like_count` int DEFAULT NULL,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `journal_id` (`journal_id`),
+  KEY `category_id` (`category_id`),
+  KEY `ix_articles_id` (`id`),
+  CONSTRAINT `articles_ibfk_1` FOREIGN KEY (`journal_id`) REFERENCES `journals` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `articles_ibfk_2` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Dumping data for table `articles`
 --
 
@@ -23,6 +55,24 @@ LOCK TABLES `articles` WRITE;
 /*!40000 ALTER TABLE `articles` DISABLE KEYS */;
 /*!40000 ALTER TABLE `articles` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `categories`
+--
+
+DROP TABLE IF EXISTS `categories`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `categories` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `icon` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `sort` int DEFAULT NULL,
+  `color` varchar(16) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `ix_categories_id` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `categories`
@@ -34,14 +84,63 @@ LOCK TABLES `categories` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `journals`
+--
+
+DROP TABLE IF EXISTS `journals`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `journals` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `title` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `issue_no` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `cover_url` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `description` text COLLATE utf8mb4_unicode_ci,
+  `published_at` date DEFAULT NULL,
+  `is_published` smallint DEFAULT NULL,
+  `view_count` int DEFAULT NULL,
+  `external_url` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_by` int DEFAULT NULL,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `issue_no` (`issue_no`),
+  KEY `created_by` (`created_by`),
+  KEY `ix_journals_id` (`id`),
+  CONSTRAINT `journals_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Dumping data for table `journals`
 --
 
 LOCK TABLES `journals` WRITE;
 /*!40000 ALTER TABLE `journals` DISABLE KEYS */;
-REPLACE INTO `journals` (`id`, `title`, `issue_no`, `cover_url`, `description`, `published_at`, `is_published`, `view_count`, `external_url`, `created_by`, `created_at`, `updated_at`) VALUES (1,'2022年三季度','第001期','/uploads/f9bba54278124c09ac28ab4614004184.png','','2022-07-22',1,0,'https://flbook.com.cn/c/53mkwVyJ9P',NULL,'2026-05-22 01:33:42','2026-05-22 01:38:24'),(2,'2023年一季度','第002期','/uploads/90d395e8739e44c7a5c7ad9900778216.png','','2023-01-22',1,0,'https://flbook.com.cn/c/WIQvj96A55',NULL,'2026-05-22 01:36:18','2026-05-22 01:36:20'),(3,'2023年二季度','第003期','/uploads/80965f99a3a94d8ea5c637649e9f314e.png','','2023-04-22',1,0,'https://flbook.com.cn/c/CcXA5FQeC9',NULL,'2026-05-22 01:38:04','2026-05-22 01:39:43'),(4,'2023年三季度','第004期','/uploads/dd69c8ffa3774eafa557370a0f1f59f3.png','','2023-07-22',1,0,'https://flbook.com.cn/c/cYI8bH8Sis',NULL,'2026-05-22 01:39:33','2026-05-22 01:39:43'),(5,'2023年四季度','第005期','/uploads/f0dcb254175244af8d0163208379e631.png','','2023-10-22',1,0,'https://flbook.com.cn/c/LLIzaq6uKM',NULL,'2026-05-22 01:41:06','2026-05-22 01:41:11'),(6,'2024年一季度','第006期','/uploads/fcf5a7f84e224700a37ca6cf0ab23da9.png','','2024-01-22',1,0,'https://flbook.com.cn/c/DCo26vSJDx',NULL,'2026-05-22 01:41:50','2026-05-22 01:44:22'),(7,'2024年二季度','第007期','/uploads/7c1377bbf492441f9a6206f4fd59cf86.png','','2024-04-22',1,0,'https://flbook.com.cn/c/L4p6fsdbvH',NULL,'2026-05-22 01:44:56','2026-05-22 01:44:57'),(8,'2024年三季度','第008期','/uploads/a6700ab16128406593b83d4323ddc334.png','','2024-07-22',1,0,'https://flbook.com.cn/c/TUA1XPDVNP',NULL,'2026-05-22 01:51:12','2026-05-22 01:54:22'),(9,'2024年四季度','第009期','/uploads/3e3d507aba444feba52b3328d22620d8.png','','2024-10-22',1,0,'https://flbook.com.cn/c/VyRRc1tbK2 ',NULL,'2026-05-22 01:51:38','2026-05-22 01:54:23'),(10,'2025年一季度','第010期','/uploads/b054ec34ffdb4c10ae314a66d65d9ff7.png','','2025-01-22',1,0,'https://flbook.com.cn/c/Pesuf38p7t',NULL,'2026-05-22 01:54:19','2026-05-22 01:54:24'),(11,'2025年二季度','第011期','/uploads/d28ec0fb155949cc82bda0237965c1ac.png','','2025-04-22',1,0,'https://flbook.com.cn/c/COTY5VAtHI',NULL,'2026-05-22 01:54:56','2026-05-22 01:54:59'),(12,'2025年三季度','第012期','/uploads/aa6bc6b8995543d68a4e76a234ab5ede.png','','2025-07-22',1,0,'https://flbook.com.cn/c/3LsSxqw6oJ',NULL,'2026-05-22 02:00:25','2026-05-22 02:00:55'),(13,'2025年四季度','第013期','/uploads/507fb6cc482d4ce3995ff4e5b079ecd6.png','','2025-10-22',1,0,'https://flbook.com.cn/c/mG5eBA3bWk',NULL,'2026-05-22 02:00:53','2026-05-22 02:00:56'),(14,'2026年一季度','第014期','/uploads/14ad6c0a59e84a7a86e679654180f011.png','','2026-01-22',1,0,'https://flbook.com.cn/c/hiyzU5wQdJ',NULL,'2026-05-22 02:01:25','2026-05-22 02:01:27');
+REPLACE INTO `journals` (`id`, `title`, `issue_no`, `cover_url`, `description`, `published_at`, `is_published`, `view_count`, `external_url`, `created_by`, `created_at`, `updated_at`) VALUES (1,'2022年三季度','第001期','/uploads/f9bba54278124c09ac28ab4614004184.png','','2022-07-22',1,2,'https://flbook.com.cn/c/53mkwVyJ9P',NULL,'2026-05-22 01:33:42','2026-06-26 03:44:33'),(2,'2023年一季度','第002期','/uploads/90d395e8739e44c7a5c7ad9900778216.png','','2023-01-22',1,2,'https://flbook.com.cn/c/WIQvj96A55',NULL,'2026-05-22 01:36:18','2026-06-26 05:34:30'),(3,'2023年二季度','第003期','/uploads/80965f99a3a94d8ea5c637649e9f314e.png','','2023-04-22',1,2,'https://flbook.com.cn/c/CcXA5FQeC9',NULL,'2026-05-22 01:38:04','2026-06-26 05:52:38'),(4,'2023年三季度','第004期','/uploads/dd69c8ffa3774eafa557370a0f1f59f3.png','','2023-07-22',1,3,'https://flbook.com.cn/c/cYI8bH8Sis',NULL,'2026-05-22 01:39:33','2026-06-26 05:56:45'),(5,'2023年四季度','第005期','/uploads/f0dcb254175244af8d0163208379e631.png','','2023-10-22',1,5,'https://flbook.com.cn/c/LLIzaq6uKM',NULL,'2026-05-22 01:41:06','2026-06-26 06:28:58'),(6,'2024年一季度','第006期','/uploads/fcf5a7f84e224700a37ca6cf0ab23da9.png','','2024-01-22',1,3,'https://flbook.com.cn/c/DCo26vSJDx',NULL,'2026-05-22 01:41:50','2026-06-26 06:38:37'),(7,'2024年二季度','第007期','/uploads/7c1377bbf492441f9a6206f4fd59cf86.png','','2024-04-22',1,3,'https://flbook.com.cn/c/L4p6fsdbvH',NULL,'2026-05-22 01:44:56','2026-06-26 06:46:49'),(8,'2024年三季度','第008期','/uploads/a6700ab16128406593b83d4323ddc334.png','','2024-07-22',1,2,'https://flbook.com.cn/c/TUA1XPDVNP',NULL,'2026-05-22 01:51:12','2026-06-26 01:21:13'),(9,'2024年四季度','第009期','/uploads/3e3d507aba444feba52b3328d22620d8.png','','2024-10-22',1,3,'https://flbook.com.cn/c/VyRRc1tbK2 ',NULL,'2026-05-22 01:51:38','2026-06-25 05:18:54'),(10,'2025年一季度','第010期','/uploads/b054ec34ffdb4c10ae314a66d65d9ff7.png','','2025-01-22',1,4,'https://flbook.com.cn/c/Pesuf38p7t',NULL,'2026-05-22 01:54:19','2026-06-26 01:19:59'),(11,'2025年二季度','第011期','/uploads/d28ec0fb155949cc82bda0237965c1ac.png','','2025-04-22',1,2,'https://flbook.com.cn/c/COTY5VAtHI',NULL,'2026-05-22 01:54:56','2026-06-26 01:13:48'),(12,'2025年三季度','第012期','/uploads/aa6bc6b8995543d68a4e76a234ab5ede.png','','2025-07-22',1,2,'https://flbook.com.cn/c/3LsSxqw6oJ',NULL,'2026-05-22 02:00:25','2026-06-26 01:12:11'),(13,'2025年四季度','第013期','/uploads/507fb6cc482d4ce3995ff4e5b079ecd6.png','','2025-10-22',1,2,'https://flbook.com.cn/c/mG5eBA3bWk',NULL,'2026-05-22 02:00:53','2026-06-26 01:08:08'),(14,'2026年一季度','第014期','/uploads/14ad6c0a59e84a7a86e679654180f011.png','','2026-01-22',1,3,'https://flbook.com.cn/c/hiyzU5wQdJ',NULL,'2026-05-22 02:01:25','2026-06-26 01:03:28'),(16,'2026年二季度','第015期','/uploads/2d96eb0729c74fc196064d7760b7d020.png','','2026-06-25',1,14,'https://flbook.com.cn/c/jwVi7mdEEE',NULL,'2026-06-25 01:05:29','2026-06-26 01:15:38');
 /*!40000 ALTER TABLE `journals` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `likes`
+--
+
+DROP TABLE IF EXISTS `likes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `likes` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `article_id` int NOT NULL,
+  `user_id` int NOT NULL,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `article_id` (`article_id`),
+  KEY `user_id` (`user_id`),
+  KEY `ix_likes_id` (`id`),
+  CONSTRAINT `likes_ibfk_1` FOREIGN KEY (`article_id`) REFERENCES `articles` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `likes_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `likes`
@@ -51,6 +150,30 @@ LOCK TABLES `likes` WRITE;
 /*!40000 ALTER TABLE `likes` DISABLE KEYS */;
 /*!40000 ALTER TABLE `likes` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `site_config`
+--
+
+DROP TABLE IF EXISTS `site_config`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `site_config` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `key` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `value` text COLLATE utf8mb4_unicode_ci,
+  `label` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `description` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `group` varchar(32) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `updated_by` int DEFAULT NULL,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `ix_site_config_key` (`key`),
+  KEY `updated_by` (`updated_by`),
+  KEY `ix_site_config_id` (`id`),
+  CONSTRAINT `site_config_ibfk_1` FOREIGN KEY (`updated_by`) REFERENCES `users` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `site_config`
@@ -63,6 +186,29 @@ REPLACE INTO `site_config` (`id`, `key`, `value`, `label`, `description`, `group
 UNLOCK TABLES;
 
 --
+-- Table structure for table `users`
+--
+
+DROP TABLE IF EXISTS `users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `users` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `username` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `role` enum('admin','editor','reader') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `is_active` smallint DEFAULT NULL,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username` (`username`),
+  UNIQUE KEY `email` (`email`),
+  KEY `ix_users_id` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Dumping data for table `users`
 --
 
@@ -71,6 +217,10 @@ LOCK TABLES `users` WRITE;
 REPLACE INTO `users` (`id`, `username`, `email`, `password`, `role`, `is_active`, `created_at`, `updated_at`) VALUES (1,'admin','admin@ego-intl.com','$2b$12$0THKL9BGteHLMlInMn66V.NcYuxJta4oh/w0GQis/H.Rt4Ui1180i','admin',1,'2026-05-21 09:39:27','2026-05-21 09:39:27');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Dumping routines for database 'ego_journal'
+--
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -81,4 +231,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-05-22  2:49:32
+-- Dump completed on 2026-07-01  0:43:40
