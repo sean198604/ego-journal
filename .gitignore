@@ -24,3 +24,6 @@ uploads/journals/*.pdf
 .idea/
 .vscode/
 *.swp
+
+# 上传备份（运行期数据，非源码）
+uploads_backup/
