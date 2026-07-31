@@ -8,7 +8,6 @@ import api from '../services/api'
 
 const { Title, Paragraph } = Typography
 
-// 默认配置
 const defaultConfig = {
   editorial_intro: '一群怀揣热情的人，用文字与设计，守护每一期内刊的诞生',
   editorial_chief: '史金鑫 Jessie',
@@ -26,47 +25,54 @@ const defaultConfig = {
   editorial_member_photos: {},
 }
 
-// 核心团队照片
 const CORE_PHOTOS = (config) => {
   const photos = config.editorial_member_photos || {}
   return [
-    { role: '主编', name: config.editorial_chief, dept: config.editorial_chief_dept, desc: config.editorial_chief_desc, photo: photos.chief, color: '#4f6ef7', bg: 'rgba(79,110,247,0.08)', icon: <CrownOutlined style={{ fontSize: 24, color: '#4f6ef7' }} /> },
-    { role: '副编', name: config.editorial_deputy, dept: config.editorial_deputy_dept, desc: config.editorial_deputy_desc, photo: photos.deputy, color: '#8b5cf6', bg: 'rgba(139,92,246,0.08)', icon: <EditOutlined style={{ fontSize: 24, color: '#8b5cf6' }} /> },
-    { role: '排版', name: config.editorial_designer, dept: config.editorial_designer_dept, desc: config.editorial_designer_desc, photo: photos.designer, color: '#f59e0b', bg: 'rgba(245,158,11,0.08)', icon: <BgColorsOutlined style={{ fontSize: 24, color: '#f59e0b' }} /> },
+    { role: '主编', name: config.editorial_chief, dept: config.editorial_chief_dept, desc: config.editorial_chief_desc, photo: photos.chief, color: '#4f6ef7', bg: 'rgba(79,110,247,0.10)', icon: <CrownOutlined style={{ fontSize: 24, color: '#4f6ef7' }} /> },
+    { role: '副编', name: config.editorial_deputy, dept: config.editorial_deputy_dept, desc: config.editorial_deputy_desc, photo: photos.deputy, color: '#8b5cf6', bg: 'rgba(139,92,246,0.10)', icon: <EditOutlined style={{ fontSize: 24, color: '#8b5cf6' }} /> },
+    { role: '排版', name: config.editorial_designer, dept: config.editorial_designer_dept, desc: config.editorial_designer_desc, photo: photos.designer, color: '#f59e0b', bg: 'rgba(245,158,11,0.10)', icon: <BgColorsOutlined style={{ fontSize: 24, color: '#f59e0b' }} /> },
   ]
 }
 
-function MemberCard({ member, showPhoto = false }) {
-  // 取姓名首字作为 Avatar 备选
-  const initial = member.name ? member.name.trim()[0] : '?'
+// 通用玻璃面板样式
+const glassPanel = {
+  background: 'rgba(255,255,255,0.55)',
+  backdropFilter: 'blur(14px) saturate(160%)',
+  WebkitBackdropFilter: 'blur(14px) saturate(160%)',
+  border: '1px solid rgba(255,255,255,0.65)',
+  borderRadius: 20,
+  boxShadow: '0 6px 22px rgba(15,23,42,0.06), inset 0 1px 0 rgba(255,255,255,0.7)',
+}
+
+function MemberCard({ member }) {
   return (
     <div style={{
-      background: '#fff',
-      border: '1px solid #e8ecf2',
+      background: 'rgba(255,255,255,0.48)',
+      backdropFilter: 'blur(10px) saturate(140%)',
+      WebkitBackdropFilter: 'blur(10px) saturate(140%)',
+      border: '1px solid rgba(255,255,255,0.6)',
       borderRadius: 14,
       padding: '20px',
-      display: 'flex',
-      alignItems: 'center',
-      gap: 14,
-      transition: 'all 0.25s ease',
+      display: 'flex', alignItems: 'center', gap: 14,
+      transition: 'transform 0.25s cubic-bezier(0.32,0.72,0,1), box-shadow 0.25s, border-color 0.25s',
+      boxShadow: '0 4px 12px rgba(15,23,42,0.04), inset 0 1px 0 rgba(255,255,255,0.6)',
     }}
       onMouseEnter={e => {
         e.currentTarget.style.transform = 'translateY(-2px)'
-        e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.08)'
+        e.currentTarget.style.boxShadow = '0 8px 24px rgba(15,23,42,0.1), inset 0 1px 0 rgba(255,255,255,0.7)'
         e.currentTarget.style.borderColor = (member.color || '#4f6ef7') + '44'
       }}
       onMouseLeave={e => {
         e.currentTarget.style.transform = 'translateY(0)'
-        e.currentTarget.style.boxShadow = 'none'
-        e.currentTarget.style.borderColor = '#e8ecf2'
+        e.currentTarget.style.boxShadow = '0 4px 12px rgba(15,23,42,0.04), inset 0 1px 0 rgba(255,255,255,0.6)'
+        e.currentTarget.style.borderColor = 'rgba(255,255,255,0.6)'
       }}
     >
       <div style={{
         width: 48, height: 48, borderRadius: 12,
         background: member.bg,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        flexShrink: 0,
-        overflow: 'hidden',
+        flexShrink: 0, overflow: 'hidden',
       }}>
         {member.photo
           ? <img src={member.photo} alt={member.name} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 12 }} onError={e => { e.target.style.display = 'none'; e.target.nextSibling && (e.target.nextSibling.style.display = 'flex') }} />
@@ -79,16 +85,13 @@ function MemberCard({ member, showPhoto = false }) {
         )}
       </div>
       <div style={{ flex: 1 }}>
-        <div style={{ fontWeight: 700, fontSize: 14, color: '#0f172a' }}>{member.name}</div>
+        <div style={{ fontWeight: 700, fontSize: 14, color: '#1e293b' }}>{member.name}</div>
         {member.dept && <div style={{ fontSize: 12, color: '#94a3b8', marginTop: 2 }}>{member.dept}</div>}
       </div>
       <div style={{
-        background: member.bg,
-        color: member.color,
-        padding: '4px 10px',
-        borderRadius: 16,
-        fontSize: 11,
-        fontWeight: 600,
+        background: member.bg, color: member.color,
+        padding: '4px 10px', borderRadius: 16,
+        fontSize: 11, fontWeight: 600,
       }}>
         {member.role}
       </div>
@@ -96,42 +99,42 @@ function MemberCard({ member, showPhoto = false }) {
   )
 }
 
-// 普通成员卡片（可带照片）
 function EditorMemberCard({ member, index, photos }) {
   const memberList = Array.isArray(photos) ? photos : []
   const photo = memberList[index] || null
   return (
     <Col xs={12} sm={8} md={6} key={index}>
       <div style={{
-        background: '#fff',
-        border: '1px solid #e8ecf2',
+        background: 'rgba(255,255,255,0.48)',
+        backdropFilter: 'blur(10px) saturate(140%)',
+        WebkitBackdropFilter: 'blur(10px) saturate(140%)',
+        border: '1px solid rgba(255,255,255,0.6)',
         borderRadius: 12,
-        padding: '16px 20px',
-        textAlign: 'center',
-        transition: 'all 0.2s ease',
+        padding: '16px 20px', textAlign: 'center',
+        transition: 'transform 0.25s cubic-bezier(0.32,0.72,0,1), box-shadow 0.25s',
+        boxShadow: '0 3px 10px rgba(15,23,42,0.04), inset 0 1px 0 rgba(255,255,255,0.6)',
       }}
         onMouseEnter={e => {
           e.currentTarget.style.transform = 'translateY(-2px)'
-          e.currentTarget.style.boxShadow = '0 6px 20px rgba(0,0,0,0.06)'
+          e.currentTarget.style.boxShadow = '0 6px 20px rgba(15,23,42,0.08), inset 0 1px 0 rgba(255,255,255,0.7)'
         }}
         onMouseLeave={e => {
           e.currentTarget.style.transform = 'translateY(0)'
-          e.currentTarget.style.boxShadow = 'none'
+          e.currentTarget.style.boxShadow = '0 3px 10px rgba(15,23,42,0.04), inset 0 1px 0 rgba(255,255,255,0.6)'
         }}
       >
         <div style={{
           width: 40, height: 40, borderRadius: 10,
-          background: 'rgba(16,185,129,0.08)',
+          background: 'rgba(16,185,129,0.10)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          margin: '0 auto 10px',
-          overflow: 'hidden',
+          margin: '0 auto 10px', overflow: 'hidden',
         }}>
           {photo
             ? <img src={photo} alt={member.name} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 10 }} />
             : <UserOutlined style={{ fontSize: 18, color: '#10b981' }} />
           }
         </div>
-        <div style={{ fontWeight: 600, fontSize: 13, color: '#0f172a' }}>{member.name}</div>
+        <div style={{ fontWeight: 600, fontSize: 13, color: '#1e293b' }}>{member.name}</div>
       </div>
     </Col>
   )
@@ -153,23 +156,17 @@ export default function EditorialPage() {
 
   if (loading) {
     return (
-      <div style={{ background: '#f4f7fb', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ background: 'transparent', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <Spin size="large" />
       </div>
     )
   }
 
-  // 构建团队成员（从配置读取含照片）
   const EDITORIAL_TEAM = CORE_PHOTOS(config)
-
-  // 解析编辑成员
-  const EDITOR_MEMBERS = (config.editorial_members || '')
-    .split(/[、,]/)
-    .filter(Boolean)
-    .map(name => ({ name }))
+  const EDITOR_MEMBERS = (config.editorial_members || '').split(/[、,]/).filter(Boolean).map(name => ({ name }))
 
   return (
-    <div style={{ background: '#f4f7fb', minHeight: '100vh' }}>
+    <div style={{ background: 'transparent', minHeight: '100vh' }}>
       <style>{`
         @media (max-width: 640px) {
           .editorial-content { padding: 0 12px 48px !important; margin-top: -20px !important; }
@@ -177,26 +174,25 @@ export default function EditorialPage() {
           .editorial-quote-card { padding: 24px 20px !important; }
         }
       `}</style>
-      {/* 顶部 Banner */}
+
+      {/* Banner */}
       <div style={{
         background: 'linear-gradient(135deg, #064e3b 0%, #059669 50%, #10b981 100%)',
-        padding: '52px 32px',
-        position: 'relative', overflow: 'hidden',
+        padding: '52px 32px', position: 'relative', overflow: 'hidden',
       }}>
         <div style={{ position: 'absolute', right: '5%', top: '-10%', width: 320, height: 320, borderRadius: '50%', background: 'rgba(255,255,255,0.04)', pointerEvents: 'none' }} />
         <div style={{ position: 'absolute', left: '3%', bottom: '-30%', width: 200, height: 200, borderRadius: '50%', background: 'rgba(255,255,255,0.05)', pointerEvents: 'none' }} />
         <div style={{ maxWidth: 800, margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <div style={{
             display: 'inline-flex', alignItems: 'center', gap: 6,
-            background: 'rgba(255,255,255,0.12)', borderRadius: 20,
-            padding: '4px 14px', marginBottom: 16,
-            color: 'rgba(255,255,255,0.8)', fontSize: 12, letterSpacing: 2,
+            background: 'rgba(255,255,255,0.15)',
+            backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
+            borderRadius: 20, padding: '4px 14px', marginBottom: 16,
+            color: 'rgba(255,255,255,0.85)', fontSize: 12, letterSpacing: 2, fontWeight: 500,
           }}>
             <TeamOutlined />  EDITORIAL TEAM
           </div>
-          <h1 style={{ color: '#fff', fontSize: 40, fontWeight: 900, margin: '0 0 12px', lineHeight: 1.2 }}>
-            编辑部介绍
-          </h1>
+          <h1 style={{ color: '#fff', fontSize: 40, fontWeight: 900, margin: '0 0 12px', lineHeight: 1.2 }}>编辑部介绍</h1>
           <p style={{ color: 'rgba(255,255,255,0.78)', fontSize: 15, lineHeight: 1.8, margin: 0, maxWidth: 600 }}>
             {config.editorial_intro}
           </p>
@@ -206,19 +202,11 @@ export default function EditorialPage() {
       {/* 正文内容 */}
       <div className="editorial-content" style={{ maxWidth: 1000, margin: '-40px auto 0', padding: '0 32px 64px', position: 'relative', zIndex: 5 }}>
 
-        {/* 核心团队 */}
-        <div className="editorial-core-card" style={{
-          background: '#fff',
-          borderRadius: 20,
-          padding: '32px 36px',
-          marginBottom: 24,
-          boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
-        }}>
+        {/* 核心团队 — 玻璃面��� */}
+        <div className="editorial-core-card" style={{ ...glassPanel, padding: '32px 36px', marginBottom: 24 }}>
           <div style={{ marginBottom: 20 }}>
-            <Title level={4} style={{ margin: '0 0 6px', color: '#0f172a', fontWeight: 800 }}>核心编辑团队</Title>
-            <div style={{ fontSize: 13, color: '#94a3b8' }}>
-              负责内刊整体内容策划、编辑与设计
-            </div>
+            <Title level={4} style={{ margin: '0 0 6px', color: '#1e293b', fontWeight: 800 }}>核心编辑团队</Title>
+            <div style={{ fontSize: 13, color: '#64748b' }}>负责内刊整体内容策划、编辑与设计</div>
           </div>
           <Row gutter={[16, 16]}>
             {EDITORIAL_TEAM.map(member => (
@@ -231,8 +219,8 @@ export default function EditorialPage() {
 
         {/* 编辑成员 */}
         <div style={{ marginBottom: 24 }}>
-          <Title level={4} style={{ margin: '0 0 6px', color: '#0f172a', fontWeight: 800 }}>编辑成员</Title>
-          <div style={{ fontSize: 13, color: '#94a3b8', marginBottom: 20 }}>
+          <Title level={4} style={{ margin: '0 0 6px', color: '#1e293b', fontWeight: 800 }}>编辑成员</Title>
+          <div style={{ fontSize: 13, color: '#64748b', marginBottom: 20 }}>
             来自各部门的优秀员工，用真实的故事让内刊更有温度
           </div>
           <Row gutter={[12, 12]}>
@@ -242,11 +230,11 @@ export default function EditorialPage() {
           </Row>
         </div>
 
-        {/* 编辑部寄语 */}
+        {/* 编辑部寄语 — 玻璃面板 + 绿色左边框 */}
         <div style={{
-          background: '#fff', borderRadius: 20, padding: '36px 40px',
-          boxShadow: '0 8px 32px rgba(0,0,0,0.06)',
-          borderLeft: '5px solid #10b981',
+          ...glassPanel,
+          padding: '36px 40px',
+          borderLeft: '4px solid #10b981',
           marginBottom: 32,
         }}>
           <div style={{ fontSize: 15, color: '#10b981', fontWeight: 700, marginBottom: 12, letterSpacing: 1 }}>
@@ -262,18 +250,19 @@ export default function EditorialPage() {
           </div>
         </div>
 
-        {/* 纳新公告 */}
+        {/* 纳新公告 — 暖色玻璃 */}
         <div style={{
-          background: 'linear-gradient(135deg, #fff7ed, #fed7aa)',
-          border: '1px solid #fb923c',
+          background: 'rgba(255,237,213,0.6)',
+          backdropFilter: 'blur(10px) saturate(140%)',
+          WebkitBackdropFilter: 'blur(10px) saturate(140%)',
+          border: '1px solid rgba(251,146,60,0.3)',
           borderRadius: 16,
-          padding: '20px 28px',
-          marginBottom: 32,
+          padding: '20px 28px', marginBottom: 32,
           display: 'flex', alignItems: 'center', gap: 16,
         }}>
           <div style={{
             width: 48, height: 48, borderRadius: 12,
-            background: '#fff',
+            background: 'rgba(255,255,255,0.7)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             flexShrink: 0,
           }}>

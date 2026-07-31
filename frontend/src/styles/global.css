@@ -1,94 +1,192 @@
 /* ============================================
-   EGO Journal 全局样式 — 与文化积分系统(7006)风格统一
-   主色调: #4f6ef7 / 背景: #f4f7fb
+   EGO Journal 《众瀚四季》 — Liquid Glass 设计系统
+   主色: #4f6ef7 | 弹簧: cubic-bezier(0.32,0.72,0,1)
+   参考 UI-DESIGN-SYSTEM.md / iOS 26 + Apple HIG
    ============================================ */
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
-
+/* ==================== 1. 设计令牌 ==================== */
 :root {
-  --bg-primary: #f4f7fb;
-  --bg-secondary: #ffffff;
-  --bg-card: #ffffff;
-  --bg-card-hover: #f8fafc;
-  --border-color: #e8ecf2;
-  --text-primary: #0f172a;
-  --text-secondary: #64748b;
-  --text-muted: #94a3b8;
-  --accent-blue: #4f6ef7;
-  --accent-blue-hover: #3b5de7;
-  --accent-cyan: #06b6d4;
-  --accent-gold: #f59e0b;
-  --accent-green: #10b981;
-  --accent-red: #ef4444;
-  --accent-purple: #8b5cf6;
-  --gradient-accent: linear-gradient(135deg, #4f6ef7, #818cf8);
-  --gradient-warm: linear-gradient(135deg, #f59e0b, #fbbf24);
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
-  --shadow-md: 0 4px 16px rgba(0,0,0,0.06);
-  --shadow-lg: 0 12px 40px rgba(0,0,0,0.08);
-  --radius: 16px;
-  --radius-sm: 10px;
-  --radius-xs: 6px;
+  /* 品牌与语义 */
+  --primary: #4f6ef7;
+  --primary-dark: #3d5be5;
+  --primary-gradient-end: #6f86fa;
+  --danger: #ef4444;
+  --success: #16a34a;
+
+  /* 中性色阶（Slate） */
+  --text-main: #0f172a;
+  --text-heading: #1e293b;
+  --text-body: #334155;
+  --text-sub: #475569;
+  --text-muted: #64748b;
+  --text-faint: #94a3b8;
+  --text-disabled: #cbd5e1;
+  --border-light: #e2e8f0;
+  --border: #e8ecf2;
+  --bg: #eef2f8;
+
+  /* 布局 */
+  --header-h: 64px;
+  --page-max: 1440px;
+
+  /* 液态玻璃核心 */
+  --spring: cubic-bezier(0.32, 0.72, 0, 1);
+  --glass-bg: rgba(255, 255, 255, 0.55);
+  --glass-bg-strong: rgba(255, 255, 255, 0.72);
+  --glass-border: rgba(255, 255, 255, 0.65);
+  --glass-shadow: 0 6px 22px rgba(15, 23, 42, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  --glass-shadow-lg: 0 30px 60px rgba(15, 23, 42, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+/* ==================== 2. 全局重置与地基 ==================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  font-family: "PingFang SC", "Microsoft YaHei", "方正悠黑简体", sans-serif;
-  min-height: 100vh;
+  /* 四角径向渐变——玻璃的地基 */
+  background:
+    radial-gradient(1100px 720px at 6% -10%, #c7d8ff 0%, transparent 55%),
+    radial-gradient(1000px 760px at 104% 2%, #e6d8ff 0%, transparent 52%),
+    radial-gradient(900px 820px at 90% 104%, #ffd9e1 0%, transparent 55%),
+    radial-gradient(820px 700px at 4% 102%, #d4f1e7 0%, transparent 55%),
+    #eef2f8;
+  background-attachment: fixed;
+  color: var(--text-main);
+  font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  line-height: 1.5;
+  min-height: 100vh;
 }
 
-/* ============ AntD 亮色覆盖 ============ */
-.ant-layout { background: transparent !important; }
-.ant-layout-sider { background: var(--bg-secondary) !important; border-right: 1px solid var(--border-color) !important; }
-.ant-menu { background: transparent !important; }
-.ant-menu-item-selected { background: rgba(79,110,247,0.08) !important; color: var(--accent-blue) !important; }
-.ant-menu-item:hover { background: rgba(79,110,247,0.04) !important; }
-.ant-layout-header { background: rgba(255,255,255,0.92) !important; border-bottom: 1px solid var(--border-color) !important; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+/* ==================== 3. 动效关键帧 ==================== */
+@keyframes viewFade {
+  from { opacity: 0; transform: translateY(10px) scale(0.99); }
+  to { opacity: 1; transform: none; }
+}
 
-/* ============ 卡片组件 ============ */
+@keyframes cardEnter {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* ==================== 4. 玻璃卡片基类 ==================== */
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(14px) saturate(160%);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  padding: 16px;
+  box-shadow: var(--glass-shadow);
+  transition: transform 0.28s var(--spring), box-shadow 0.28s var(--spring),
+    border-color 0.28s var(--spring);
+}
+.glass-card:hover {
+  transform: translateY(-4px) scale(1.01);
+  border-color: rgba(79, 110, 247, 0.35);
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+/* 窄卡片（悬停横向微移） */
+.glass-card--row:hover {
+  transform: translateX(3px);
+  border-color: rgba(79, 110, 247, 0.3);
+}
+
+/* 浅玻璃（网格/列表内） */
+.glass-card--light {
+  background: rgba(255, 255, 255, 0.48);
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+}
+
+/* 深玻璃（大面板/弹窗） */
+.glass-card--strong {
+  background: var(--glass-bg-strong);
+  backdrop-filter: blur(34px) saturate(180%);
+  -webkit-backdrop-filter: blur(34px) saturate(180%);
+}
+
+/* ==================== 5. 期刊卡片（玻璃版） ==================== */
 .journal-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius);
+  background: var(--glass-bg);
+  backdrop-filter: blur(14px) saturate(160%);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
   overflow: hidden;
-  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition: transform 0.28s var(--spring), box-shadow 0.28s var(--spring),
+    border-color 0.28s var(--spring);
   cursor: pointer;
   position: relative;
+  box-shadow: 0 6px 22px rgba(15, 23, 42, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.7);
 }
 .journal-card:hover {
-  transform: translateY(-6px);
-  box-shadow: var(--shadow-lg);
-  border-color: transparent;
+  transform: translateY(-4px) scale(1.01);
+  border-color: rgba(79, 110, 247, 0.35);
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.7);
 }
+/* 顶部彩色指示条——hover 时滑入 */
 .journal-card::after {
-  content: '';
+  content: "";
   position: absolute;
-  top: 0; left: 0; right: 0;
+  top: 0;
+  left: 0;
+  right: 0;
   height: 3px;
-  background: var(--gradient-accent);
+  background: linear-gradient(135deg, var(--primary), var(--primary-gradient-end));
   opacity: 0;
-  transition: opacity 0.3s;
+  transition: opacity 0.28s var(--spring);
 }
-.journal-card:hover::after { opacity: 1; }
+.journal-card:hover::after {
+  opacity: 1;
+}
 
-/* ============ 文章卡片 ============ */
+/* 期号徽章 */
+.issue-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, #4f6ef7, #6f86fa);
+  color: #fff;
+  padding: 3px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* ==================== 6. 文章卡片 ==================== */
 .article-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-sm);
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
   padding: 20px;
-  transition: all 0.25s ease;
+  transition: transform 0.25s var(--spring), box-shadow 0.25s var(--spring);
   cursor: pointer;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.6);
 }
 .article-card:hover {
-  box-shadow: var(--shadow-md);
-  border-color: var(--accent-blue);
   transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  border-color: rgba(79, 110, 247, 0.3);
 }
 
-/* ============ 栏目标签 ============ */
+/* ==================== 7. 入口卡片 ==================== */
+.info-card-hover:hover {
+  transform: translateY(-3px) !important;
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.1) !important;
+  border-color: transparent !important;
+}
+
+/* ==================== 8. 栏目标签 ==================== */
 .category-tag {
   display: inline-flex;
   align-items: center;
@@ -99,27 +197,7 @@ body {
   font-weight: 500;
 }
 
-/* ============ 玻璃效果 Header ============ */
-.glass-header {
-  background: rgba(255,255,255,0.92) !important;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid var(--border-color);
-  box-shadow: var(--shadow-sm);
-}
-
-/* ============ 徽章/标签 ============ */
-.issue-badge {
-  display: inline-block;
-  background: var(--gradient-accent);
-  color: #fff;
-  padding: 3px 12px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-}
-
+/* 推荐徽章 */
 .featured-badge {
   display: inline-flex;
   align-items: center;
@@ -132,66 +210,283 @@ body {
   font-weight: 600;
 }
 
-/* ============ AntD 组件覆盖 ============ */
-.ant-table { background: var(--bg-card) !important; color: var(--text-primary) !important; }
-.ant-table-thead > tr > th { background: #f8fafc !important; color: var(--text-secondary) !important; border-bottom: 1px solid var(--border-color) !important; font-weight: 600 !important; }
-.ant-table-tbody > tr > td { border-bottom: 1px solid var(--border-color) !important; color: var(--text-primary) !important; }
-.ant-table-tbody > tr:hover > td { background: var(--bg-card-hover) !important; }
-.ant-pagination-item { background: var(--bg-card) !important; border-color: var(--border-color) !important; }
-.ant-pagination-item a { color: var(--text-secondary) !important; }
-.ant-pagination-item-active { border-color: var(--accent-blue) !important; }
-.ant-pagination-item-active a { color: var(--accent-blue) !important; }
-
-.ant-input, .ant-select-selector, .ant-picker { background: #f8fafc !important; border-color: var(--border-color) !important; color: var(--text-primary) !important; }
-.ant-input:focus, .ant-input-focused { border-color: var(--accent-blue) !important; box-shadow: 0 0 0 3px rgba(79,110,247,0.12) !important; }
-.ant-form-item-label > label { color: var(--text-secondary) !important; }
-
-.ant-modal-content { background: var(--bg-card) !important; }
-.ant-modal-header { background: var(--bg-card) !important; border-bottom: 1px solid var(--border-color) !important; }
-.ant-modal-title { color: var(--text-primary) !important; }
-
-.ant-select-dropdown { background: #ffffff !important; }
-.ant-select-item { color: var(--text-primary) !important; }
-.ant-select-item-option-selected { background: rgba(79,110,247,0.08) !important; }
-.ant-select-item-option:hover { background: #f8fafc !important; }
-
-.ant-tabs-tab { color: var(--text-secondary) !important; }
-.ant-tabs-tab-active .ant-tabs-tab-btn { color: var(--accent-blue) !important; }
-.ant-tabs-ink-bar { background: var(--accent-blue) !important; }
-
-.ant-card { background: var(--bg-card) !important; border: 1px solid var(--border-color) !important; }
-.ant-card-head { background: transparent !important; border-bottom: 1px solid var(--border-color) !important; color: var(--text-primary) !important; }
-.ant-divider { border-color: var(--border-color) !important; }
-.ant-statistic-title { color: var(--text-secondary) !important; font-size: 13px; }
-.ant-statistic-content-value { color: var(--text-primary) !important; }
-
-/* ============ 封面图占位 ============ */
-.cover-placeholder {
-  background: linear-gradient(135deg, #e8ecf2, #f4f7fb);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text-muted);
-  font-size: 40px;
+/* ==================== 9. 玻璃顶栏 ==================== */
+.glass-header {
+  background: transparent !important;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08) !important;
+  box-shadow: none !important;
+}
+/* 滚动后才变玻璃 */
+.glass-header.scrolled {
+  background: rgba(255, 255, 255, 0.72) !important;
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  box-shadow: 0 6px 22px rgba(15, 23, 42, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.7) !important;
 }
 
-/* ============ 富文本内容渲染 ============ */
+/* ==================== 10. Ant Design 组件覆盖 ==================== */
+/* 去除 AntD Layout 的背景 */
+.ant-layout {
+  background: transparent !important;
+}
+.ant-layout-sider {
+  background: var(--glass-bg-strong) !important;
+  backdrop-filter: blur(14px) saturate(160%);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  border-right: 1px solid rgba(255, 255, 255, 0.5) !important;
+}
+.ant-menu {
+  background: transparent !important;
+}
+.ant-menu-item-selected {
+  background: rgba(79, 110, 247, 0.08) !important;
+  color: var(--primary) !important;
+}
+.ant-menu-item:hover {
+  background: rgba(79, 110, 247, 0.04) !important;
+}
+
+/* Table */
+.ant-table {
+  background: transparent !important;
+  color: var(--text-main) !important;
+}
+.ant-table-thead > tr > th {
+  background: rgba(255, 255, 255, 0.55) !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: var(--text-muted) !important;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.6) !important;
+  font-weight: 600 !important;
+}
+.ant-table-tbody > tr > td {
+  border-bottom: 1px solid rgba(226, 232, 240, 0.4) !important;
+  color: var(--text-main) !important;
+}
+.ant-table-tbody > tr:hover > td {
+  background: rgba(255, 255, 255, 0.6) !important;
+}
+.ant-pagination-item {
+  background: rgba(255, 255, 255, 0.55) !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
+}
+.ant-pagination-item a {
+  color: var(--text-muted) !important;
+}
+.ant-pagination-item-active {
+  border-color: var(--primary) !important;
+}
+.ant-pagination-item-active a {
+  color: var(--primary) !important;
+}
+
+/* Input / Select / DatePicker — 玻璃质感 + focus 光晕 */
+.ant-input,
+.ant-select-selector,
+.ant-picker {
+  background: rgba(255, 255, 255, 0.6) !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-color: rgba(226, 232, 240, 0.8) !important;
+  color: var(--text-main) !important;
+  border-radius: 12px !important;
+  transition: border-color 0.2s var(--spring), box-shadow 0.2s var(--spring) !important;
+}
+.ant-input:focus,
+.ant-input-focused,
+.ant-select-focused .ant-select-selector,
+.ant-picker-focused {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 4px rgba(79, 110, 247, 0.14) !important;
+  background: rgba(255, 255, 255, 0.85) !important;
+}
+.ant-form-item-label > label {
+  color: var(--text-sub) !important;
+}
+
+/* Modal — 玻璃蒙版 + 玻璃卡片 */
+.ant-modal-mask {
+  background: rgba(15, 23, 42, 0.28) !important;
+  backdrop-filter: blur(12px) saturate(140%);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+}
+.ant-modal-content {
+  background: var(--glass-bg-strong) !important;
+  backdrop-filter: blur(34px) saturate(180%);
+  -webkit-backdrop-filter: blur(34px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 26px !important;
+  box-shadow: var(--glass-shadow-lg) !important;
+}
+.ant-modal-header {
+  background: transparent !important;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.6) !important;
+}
+.ant-modal-title {
+  color: var(--text-main) !important;
+}
+
+/* Select 下拉 */
+.ant-select-dropdown {
+  background: rgba(255, 255, 255, 0.86) !important;
+  backdrop-filter: blur(26px) saturate(180%);
+  -webkit-backdrop-filter: blur(26px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  border-radius: 16px !important;
+}
+.ant-select-item {
+  color: var(--text-body) !important;
+}
+.ant-select-item-option-selected {
+  background: rgba(79, 110, 247, 0.08) !important;
+}
+.ant-select-item-option:hover {
+  background: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Tabs */
+.ant-tabs-tab {
+  color: var(--text-muted) !important;
+}
+.ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: var(--primary) !important;
+}
+.ant-tabs-ink-bar {
+  background: var(--primary) !important;
+}
+
+/* Card */
+.ant-card {
+  background: var(--glass-bg) !important;
+  backdrop-filter: blur(14px) saturate(160%);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  border: 1px solid var(--glass-border) !important;
+  border-radius: 20px !important;
+}
+.ant-card-head {
+  background: transparent !important;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.5) !important;
+  color: var(--text-main) !important;
+}
+.ant-divider {
+  border-color: rgba(226, 232, 240, 0.5) !important;
+}
+.ant-statistic-title {
+  color: var(--text-muted) !important;
+  font-size: 13px;
+}
+.ant-statistic-content-value {
+  color: var(--text-main) !important;
+}
+
+/* 按钮覆盖 — 保持 AntD 结构但改外观 */
+.ant-btn {
+  border-radius: 12px !important;
+  font-weight: 600 !important;
+  transition: all 0.22s var(--spring) !important;
+}
+.ant-btn-primary {
+  background: linear-gradient(135deg, #4f6ef7, #6f86fa) !important;
+  color: #fff !important;
+  border: none !important;
+  box-shadow: 0 6px 16px rgba(79, 110, 247, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
+}
+.ant-btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(79, 110, 247, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.5) !important;
+}
+.ant-btn-primary:active {
+  transform: translateY(0) scale(0.98);
+}
+.ant-btn-default {
+  background: rgba(255, 255, 255, 0.55) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: var(--text-sub) !important;
+  border: 1px solid rgba(255, 255, 255, 0.7) !important;
+  box-shadow: var(--glass-shadow) !important;
+}
+.ant-btn-default:hover {
+  color: var(--primary) !important;
+  border-color: rgba(79, 110, 247, 0.4) !important;
+  background: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* ==================== 11. 富文本内容渲染 ==================== */
 .article-content {
   line-height: 1.9;
   font-size: 15px;
-  color: var(--text-primary);
+  color: var(--text-main);
 }
-.article-content h1, .article-content h2, .article-content h3 {
+.article-content h1,
+.article-content h2,
+.article-content h3 {
   margin: 1.5em 0 0.75em;
   font-weight: 700;
-  color: var(--text-primary);
+  color: var(--text-main);
 }
-.article-content p { margin-bottom: 1em; }
-.article-content img { max-width: 100%; border-radius: var(--radius-sm); margin: 1em 0; }
+.article-content p {
+  margin-bottom: 1em;
+}
+.article-content img {
+  max-width: 100%;
+  border-radius: 12px;
+  margin: 1em 0;
+}
 .article-content blockquote {
-  border-left: 4px solid var(--accent-blue);
+  border-left: 4px solid var(--primary);
   padding-left: 16px;
   margin: 1.5em 0;
-  color: var(--text-secondary);
+  color: var(--text-muted);
   font-style: italic;
+}
+
+/* ==================== 12. 响应式断点 ==================== */
+@media (max-width: 900px) {
+  :root {
+    --page-max: none;
+  }
+}
+@media (max-width: 768px) {
+  .nav-label {
+    display: none !important;
+  }
+  .nav-subtitle {
+    display: none !important;
+  }
+  .nav-contribute-text {
+    display: none !important;
+  }
+  .nav-header {
+    padding: 0 16px !important;
+  }
+  .nav-item {
+    padding: 6px 10px !important;
+  }
+}
+@media (max-width: 640px) {
+  .home-content-wrap {
+    padding: 0 12px !important;
+  }
+  .info-card-grid {
+    grid-template-columns: 1fr !important;
+    margin-top: -16px !important;
+    gap: 12px !important;
+  }
+  .journal-card-cover {
+    height: 180px !important;
+  }
+}
+
+/* ==================== 13. 无障碍降级 ==================== */
+@media (prefers-reduced-motion: reduce) {
+  .journal-card,
+  .glass-card,
+  .article-card,
+  .ant-btn,
+  .ant-input,
+  .ant-select-selector,
+  .ant-picker {
+    transition: none !important;
+  }
 }

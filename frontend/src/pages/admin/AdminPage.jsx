@@ -251,7 +251,7 @@ function JournalPanel() {
       <Table
         dataSource={list} columns={columns} rowKey="id"
         loading={loading} size="middle"
-        style={{ background: '#fff', borderRadius: 12 }}
+        style={{ background: 'rgba(255,255,255,0.55)', borderRadius: 16 }}
         pagination={{ pageSize: 20 }}
       />
 
@@ -629,7 +629,7 @@ function ContentPanel() {
                 <Collapse
                   activeKey={activeAbout}
                   onChange={setActiveAbout}
-                  style={{ background: '#fff', borderRadius: 12, border: '1px solid #e8ecf2' }}
+                  style={{ background: 'rgba(255,255,255,0.55)', borderRadius: 16, border: '1px solid rgba(255,255,255,0.65)', boxShadow: '0 6px 22px rgba(15,23,42,0.06), inset 0 1px 0 rgba(255,255,255,0.6)' }}
                 >
                   <Panel header="出刊意义（4条）" key="significance">
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -698,7 +698,7 @@ function ContentPanel() {
                 <Collapse
                   activeKey={activeEditorial}
                   onChange={setActiveEditorial}
-                  style={{ background: '#fff', borderRadius: 12, border: '1px solid #e8ecf2' }}
+                  style={{ background: 'rgba(255,255,255,0.55)', borderRadius: 16, border: '1px solid rgba(255,255,255,0.65)', boxShadow: '0 6px 22px rgba(15,23,42,0.06), inset 0 1px 0 rgba(255,255,255,0.6)' }}
                 >
                   <Panel header="核心团队成员" key="team">
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -864,7 +864,7 @@ function ContentPanel() {
                 <Collapse
                   activeKey={activeContribute}
                   onChange={setActiveContribute}
-                  style={{ background: '#fff', borderRadius: 12, border: '1px solid #e8ecf2' }}
+                  style={{ background: 'rgba(255,255,255,0.55)', borderRadius: 16, border: '1px solid rgba(255,255,255,0.65)', boxShadow: '0 6px 22px rgba(15,23,42,0.06), inset 0 1px 0 rgba(255,255,255,0.6)' }}
                 >
                   <Panel header="征文主题（5条）" key="topics">
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -948,8 +948,8 @@ function ContentPanel() {
                           display: 'flex',
                           alignItems: 'center',
                           gap: 12,
-                          background: '#f8fafc',
-                          border: '1px solid #e2e8f0',
+                          background: 'rgba(255,255,255,0.45)',
+                          border: '1px solid rgba(226,232,240,0.6)',
                           borderRadius: 10,
                           padding: '10px 12px',
                         }}>
@@ -1059,36 +1059,39 @@ export default function AdminPage() {
   ]
 
   return (
-    <Layout style={{ minHeight: '100vh', background: '#f4f7fb' }}>
-      {/* 侧边栏 */}
+    <Layout style={{ minHeight: '100vh', background: 'transparent' }}>
+      {/* 侧边栏 — 玻璃质感 */}
       <Sider
         width={220}
         style={{
-          background: '#fff',
-          borderRight: '1px solid #e8ecf2',
+          background: 'rgba(255,255,255,0.72)',
+          backdropFilter: 'blur(34px) saturate(180%)',
+          WebkitBackdropFilter: 'blur(34px) saturate(180%)',
+          borderRight: '1px solid rgba(255,255,255,0.5)',
           position: 'fixed', left: 0, top: 0, bottom: 0, zIndex: 100,
-          boxShadow: '2px 0 12px rgba(0,0,0,0.04)',
+          boxShadow: '2px 0 16px rgba(15,23,42,0.06)',
         }}
       >
         {/* Logo */}
-        <div style={{ padding: '20px 20px 16px', borderBottom: '1px solid #f1f5f9' }}>
+        <div style={{ padding: '20px 20px 16px', borderBottom: '1px solid rgba(226,232,240,0.5)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }} onClick={() => navigate('/')}>
             <div style={{
-              width: 36, height: 36, borderRadius: 10,
+              width: 36, height: 36, borderRadius: 11,
               background: 'linear-gradient(135deg, #4f6ef7, #818cf8)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
+              boxShadow: '0 6px 16px rgba(79,110,247,0.3), inset 0 1px 0 rgba(255,255,255,0.4)',
             }}>
               <BookOutlined style={{ color: '#fff', fontSize: 18 }} />
             </div>
             <div style={{ lineHeight: 1.3 }}>
-              <div style={{ fontWeight: 800, fontSize: 13, color: '#0f172a' }}>众瀚四季</div>
+              <div style={{ fontWeight: 800, fontSize: 13, color: '#1e293b' }}>众瀚四季</div>
               <div style={{ fontSize: 10, color: '#94a3b8' }}>管理后台</div>
             </div>
           </div>
         </div>
 
         {/* 用户信息 */}
-        <div style={{ padding: '12px 20px', borderBottom: '1px solid #f1f5f9' }}>
+        <div style={{ padding: '12px 20px', borderBottom: '1px solid rgba(226,232,240,0.5)' }}>
           <div style={{ fontSize: 13, fontWeight: 600, color: '#0f172a' }}>{user?.username}</div>
           <div style={{ fontSize: 11, color: '#94a3b8', marginTop: 2 }}>
             {user?.role === 'admin' ? '超级管理员' : '编辑'}

@@ -8,7 +8,6 @@ import api from '../services/api'
 
 const { Title, Paragraph } = Typography
 
-// 默认配置（API 无数据时使用）
 const defaultConfig = {
   about_intro: '《众瀚四季》——众瀚国贸旗下企业内刊，记录成长，传递文化',
   about_columns: '卷首语、文化有你、经管资讯、人在众瀚、文化纪实',
@@ -21,15 +20,13 @@ const defaultConfig = {
   about_word_limit: '不少于600字',
 }
 
-// 出刊意义图标颜色
 const SIGNIFICANCE_COLORS = [
-  { color: '#4f6ef7', bg: 'rgba(79,110,247,0.08)' },
-  { color: '#10b981', bg: 'rgba(16,185,129,0.08)' },
-  { color: '#f59e0b', bg: 'rgba(245,158,11,0.08)' },
-  { color: '#8b5cf6', bg: 'rgba(139,92,246,0.08)' },
+  { color: '#4f6ef7', bg: 'rgba(79,110,247,0.10)' },
+  { color: '#10b981', bg: 'rgba(16,185,129,0.10)' },
+  { color: '#f59e0b', bg: 'rgba(245,158,11,0.10)' },
+  { color: '#8b5cf6', bg: 'rgba(139,92,246,0.10)' },
 ]
 
-// ─── 小节标题 ────────────────────────────────────────────────────────
 function SectionTitle({ icon, title, subtitle }) {
   return (
     <div style={{ marginBottom: 28 }}>
@@ -41,23 +38,31 @@ function SectionTitle({ icon, title, subtitle }) {
         }}>
           {icon}
         </div>
-        <Title level={3} style={{ margin: 0, color: '#0f172a', fontWeight: 800 }}>{title}</Title>
+        <Title level={3} style={{ margin: 0, color: '#1e293b', fontWeight: 800 }}>{title}</Title>
       </div>
-      {subtitle && <div style={{ fontSize: 13, color: '#94a3b8', marginLeft: 48 }}>{subtitle}</div>}
+      {subtitle && <div style={{ fontSize: 13, color: '#64748b', marginLeft: 48 }}>{subtitle}</div>}
     </div>
   )
 }
 
-// ─── 栏目映射 ────────────────────────────────────────────────────────
 const COLUMN_COLORS = {
-  '卷首语': { color: '#4f6ef7', bg: 'rgba(79,110,247,0.08)' },
-  '文化有你': { color: '#06b6d4', bg: 'rgba(6,182,212,0.08)' },
-  '经办资讯': { color: '#10b981', bg: 'rgba(16,185,129,0.08)' },
-  '人在众瀚': { color: '#f59e0b', bg: 'rgba(245,158,11,0.08)' },
-  '文化纪实': { color: '#8b5cf6', bg: 'rgba(139,92,246,0.08)' },
+  '卷首语': { color: '#4f6ef7', bg: 'rgba(79,110,247,0.10)' },
+  '文化有你': { color: '#06b6d4', bg: 'rgba(6,182,212,0.10)' },
+  '经办资讯': { color: '#10b981', bg: 'rgba(16,185,129,0.10)' },
+  '人在众瀚': { color: '#f59e0b', bg: 'rgba(245,158,11,0.10)' },
+  '文化纪实': { color: '#8b5cf6', bg: 'rgba(139,92,246,0.10)' },
 }
 
-// ─── 期刊简介页 ──────────────────────────────────────────────────────
+// 通用玻璃面板样式
+const glassPanel = {
+  background: 'rgba(255,255,255,0.55)',
+  backdropFilter: 'blur(14px) saturate(160%)',
+  WebkitBackdropFilter: 'blur(14px) saturate(160%)',
+  border: '1px solid rgba(255,255,255,0.65)',
+  borderRadius: 20,
+  boxShadow: '0 6px 22px rgba(15,23,42,0.06), inset 0 1px 0 rgba(255,255,255,0.7)',
+}
+
 export default function AboutPage() {
   const [config, setConfig] = useState(defaultConfig)
   const [loading, setLoading] = useState(true)
@@ -74,17 +79,16 @@ export default function AboutPage() {
 
   if (loading) {
     return (
-      <div style={{ background: '#f4f7fb', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ background: 'transparent', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <Spin size="large" />
       </div>
     )
   }
 
-  // 解析栏目列表（按顿号分隔）
   const columns = (config.about_columns || '').split(/[、，,|]/).filter(Boolean)
 
   return (
-    <div style={{ background: '#f4f7fb', minHeight: '100vh' }}>
+    <div style={{ background: 'transparent', minHeight: '100vh' }}>
       {/* 顶部 Banner */}
       <div style={{
         background: 'linear-gradient(135deg, #1e3a8a 0%, #3b5de7 50%, #818cf8 100%)',
@@ -96,9 +100,11 @@ export default function AboutPage() {
         <div style={{ maxWidth: 800, margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <div style={{
             display: 'inline-flex', alignItems: 'center', gap: 6,
-            background: 'rgba(255,255,255,0.12)', borderRadius: 20,
+            background: 'rgba(255,255,255,0.15)',
+            backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
+            borderRadius: 20,
             padding: '4px 14px', marginBottom: 16,
-            color: 'rgba(255,255,255,0.8)', fontSize: 12, letterSpacing: 2,
+            color: 'rgba(255,255,255,0.85)', fontSize: 12, letterSpacing: 2, fontWeight: 500,
           }}>
             <BookOutlined />  ABOUT JOURNAL
           </div>
@@ -114,12 +120,8 @@ export default function AboutPage() {
       {/* 正文内容 */}
       <div style={{ maxWidth: 1000, margin: '-40px auto 0', padding: '0 32px 64px', position: 'relative', zIndex: 5 }}>
 
-        {/* 刊序引言卡片 */}
-        <div style={{
-          background: '#fff', borderRadius: 20, padding: '36px 40px',
-          boxShadow: '0 8px 32px rgba(0,0,0,0.06)',
-          marginBottom: 24,
-        }}>
+        {/* 刊序引言卡片 — 玻璃面板 */}
+        <div style={{ ...glassPanel, padding: '36px 40px', marginBottom: 24 }}>
           <div style={{ fontSize: 15, color: '#4f6ef7', fontWeight: 700, marginBottom: 12, letterSpacing: 1 }}>
             " 刊 · 序
           </div>
@@ -133,8 +135,8 @@ export default function AboutPage() {
           </Paragraph>
         </div>
 
-        {/* 主要栏目 */}
-        <div style={{ background: '#fff', borderRadius: 20, padding: '36px 40px', marginBottom: 24, boxShadow: '0 2px 12px rgba(0,0,0,0.04)' }}>
+        {/* 主要栏目 — 玻璃面板 */}
+        <div style={{ ...glassPanel, padding: '36px 40px', marginBottom: 24 }}>
           <SectionTitle
             icon={<BookOutlined style={{ fontSize: 18, color: '#f59e0b' }} />}
             title="主要栏目"
@@ -142,7 +144,7 @@ export default function AboutPage() {
           />
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
             {columns.map((name, i) => {
-              const colorMap = COLUMN_COLORS[name] || { color: '#4f6ef7', bg: 'rgba(79,110,247,0.08)' }
+              const colorMap = COLUMN_COLORS[name] || { color: '#4f6ef7', bg: 'rgba(79,110,247,0.10)' }
               return (
                 <div key={i} style={{
                   background: colorMap.bg,
@@ -152,6 +154,7 @@ export default function AboutPage() {
                   fontSize: 14,
                   fontWeight: 600,
                   border: `1.5px solid ${colorMap.color}22`,
+                  backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)',
                 }}>
                   {name}
                 </div>
@@ -160,8 +163,8 @@ export default function AboutPage() {
           </div>
         </div>
 
-        {/* 出刊意义 */}
-        <div style={{ background: '#fff', borderRadius: 20, padding: '36px 40px', marginBottom: 24, boxShadow: '0 2px 12px rgba(0,0,0,0.04)' }}>
+        {/* 出刊意义 — 玻璃面板 */}
+        <div style={{ ...glassPanel, padding: '36px 40px', marginBottom: 24 }}>
           <SectionTitle
             icon={<HeartOutlined style={{ fontSize: 18, color: '#8b5cf6' }} />}
             title={config.about_significance_title || '出刊意义'}
@@ -183,6 +186,7 @@ export default function AboutPage() {
                     borderRadius: 14,
                     padding: '20px 16px',
                     textAlign: 'center',
+                    backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)',
                   }}>
                     <div style={{
                       width: 44, height: 44, borderRadius: 12,
@@ -203,57 +207,48 @@ export default function AboutPage() {
           </Row>
         </div>
 
-        {/* 基础信息卡片（底部） */}
+        {/* 基础信息 — 三张玻璃卡片 */}
         <Row gutter={16}>
           <Col span={8}>
-            <div style={{
-              background: '#fff', borderRadius: 16, padding: '24px',
-              boxShadow: '0 4px 16px rgba(0,0,0,0.06)', textAlign: 'center',
-            }}>
+            <div style={{ ...glassPanel, padding: '24px', borderRadius: 16, textAlign: 'center' }}>
               <div style={{
                 width: 52, height: 52, borderRadius: 14,
-                background: 'rgba(79,110,247,0.08)',
+                background: 'rgba(79,110,247,0.10)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 margin: '0 auto 16px',
               }}>
                 <TeamOutlined style={{ fontSize: 24, color: '#4f6ef7' }} />
               </div>
               <div style={{ fontSize: 13, color: '#94a3b8', marginBottom: 4 }}>主办部门</div>
-              <div style={{ fontSize: 16, fontWeight: 700, color: '#0f172a' }}>{config.about_dept}</div>
+              <div style={{ fontSize: 16, fontWeight: 700, color: '#1e293b' }}>{config.about_dept}</div>
             </div>
           </Col>
           <Col span={8}>
-            <div style={{
-              background: '#fff', borderRadius: 16, padding: '24px',
-              boxShadow: '0 4px 16px rgba(0,0,0,0.06)', textAlign: 'center',
-            }}>
+            <div style={{ ...glassPanel, padding: '24px', borderRadius: 16, textAlign: 'center' }}>
               <div style={{
                 width: 52, height: 52, borderRadius: 14,
-                background: 'rgba(16,185,129,0.08)',
+                background: 'rgba(16,185,129,0.10)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 margin: '0 auto 16px',
               }}>
                 <CalendarOutlined style={{ fontSize: 24, color: '#10b981' }} />
               </div>
               <div style={{ fontSize: 13, color: '#94a3b8', marginBottom: 4 }}>出版周期</div>
-              <div style={{ fontSize: 16, fontWeight: 700, color: '#0f172a' }}>{config.about_cycle}</div>
+              <div style={{ fontSize: 16, fontWeight: 700, color: '#1e293b' }}>{config.about_cycle}</div>
             </div>
           </Col>
           <Col span={8}>
-            <div style={{
-              background: '#fff', borderRadius: 16, padding: '24px',
-              boxShadow: '0 4px 16px rgba(0,0,0,0.06)', textAlign: 'center',
-            }}>
+            <div style={{ ...glassPanel, padding: '24px', borderRadius: 16, textAlign: 'center' }}>
               <div style={{
                 width: 52, height: 52, borderRadius: 14,
-                background: 'rgba(245,158,11,0.08)',
+                background: 'rgba(245,158,11,0.10)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 margin: '0 auto 16px',
               }}>
                 <FileTextOutlined style={{ fontSize: 24, color: '#f59e0b' }} />
               </div>
               <div style={{ fontSize: 13, color: '#94a3b8', marginBottom: 4 }}>征稿字数</div>
-              <div style={{ fontSize: 16, fontWeight: 700, color: '#0f172a' }}>{config.about_word_limit}</div>
+              <div style={{ fontSize: 16, fontWeight: 700, color: '#1e293b' }}>{config.about_word_limit}</div>
             </div>
           </Col>
         </Row>

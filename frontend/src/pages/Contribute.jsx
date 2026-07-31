@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { Typography, Row, Col, Spin, Modal, Image, Button, Empty } from 'antd'
 import {
-  SendOutlined, CheckCircleOutlined, BulbOutlined,
-  PictureOutlined,
+  SendOutlined, CheckCircleOutlined, BulbOutlined, PictureOutlined,
 } from '@ant-design/icons'
 import api from '../services/api'
 
 const { Title, Paragraph } = Typography
 
-// 默认配置
 const defaultConfig = {
   contribute_intro: '每一个人都有值得被记录的故事。欢迎全体同仁踊跃投稿，让你的声音出现在《众瀚四季》。',
   contribute_topics: '价值观故事|成长感悟|正能量故事|特定主题|文艺创作',
@@ -20,7 +18,6 @@ const defaultConfig = {
   contribute_note: '编辑部收稿后5个工作日内反馈是否录用，录用稿件将进行编辑润色，不改变原意',
 }
 
-// 解析评级标准
 function parseRating(ratingStr) {
   if (!ratingStr) return []
   return ratingStr.split('|').map(item => {
@@ -30,11 +27,14 @@ function parseRating(ratingStr) {
   })
 }
 
-const RATING_COLORS = {
-  'A': { color: '#4f6ef7', bg: 'rgba(79,110,247,0.08)' },
-  'B': { color: '#10b981', bg: 'rgba(16,185,129,0.08)' },
-  'C': { color: '#f59e0b', bg: 'rgba(245,158,11,0.08)' },
-  'D': { color: '#8b5cf6', bg: 'rgba(139,92,246,0.08)' },
+// 通用玻璃面板
+const glassPanel = {
+  background: 'rgba(255,255,255,0.55)',
+  backdropFilter: 'blur(14px) saturate(160%)',
+  WebkitBackdropFilter: 'blur(14px) saturate(160%)',
+  border: '1px solid rgba(255,255,255,0.65)',
+  borderRadius: 20,
+  boxShadow: '0 6px 22px rgba(15,23,42,0.06), inset 0 1px 0 rgba(255,255,255,0.7)',
 }
 
 export default function ContributePage() {
@@ -54,54 +54,43 @@ export default function ContributePage() {
 
   if (loading) {
     return (
-      <div style={{ background: '#f4f7fb', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ background: 'transparent', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <Spin size="large" />
       </div>
     )
   }
 
-  // 解析征文主题
   const topics = (config.contribute_topics || '').split('|').filter(Boolean)
   const topicDescs = (config.contribute_topic_descs || '').split('|').filter(Boolean)
-
-  // 解析要求
   const requirements = [
-    config.contribute_requirement_1,
-    config.contribute_requirement_2,
-    config.contribute_requirement_3,
+    config.contribute_requirement_1, config.contribute_requirement_2, config.contribute_requirement_3,
   ].filter(Boolean)
-
-  // 解析评级
   const ratings = parseRating(config.contribute_rating)
-
-  // 解析往期征稿海报（兼容旧格式：字符串数组 / 新格式：对象数组）
   const rawPosters = config.contribute_posters || []
   const posters = Array.isArray(rawPosters)
     ? rawPosters.map((p) => typeof p === 'string' ? { url: p, title: '' } : { url: p.url || '', title: p.title || '' })
     : []
 
   return (
-    <div style={{ background: '#f4f7fb', minHeight: '100vh' }}>
-      {/* 顶部 Banner */}
+    <div style={{ background: 'transparent', minHeight: '100vh' }}>
+      {/* Banner */}
       <div style={{
         background: 'linear-gradient(135deg, #7c2d12 0%, #c2410c 50%, #fb923c 100%)',
-        padding: '52px 32px',
-        position: 'relative', overflow: 'hidden',
+        padding: '52px 32px', position: 'relative', overflow: 'hidden',
       }}>
         <div style={{ position: 'absolute', right: '5%', top: '-10%', width: 320, height: 320, borderRadius: '50%', background: 'rgba(255,255,255,0.04)', pointerEvents: 'none' }} />
         <div style={{ maxWidth: 800, margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <div style={{
             display: 'inline-flex', alignItems: 'center', gap: 6,
-            background: 'rgba(255,255,255,0.15)', borderRadius: 20,
-            padding: '4px 14px', marginBottom: 16,
-            color: 'rgba(255,255,255,0.9)', fontSize: 12, letterSpacing: 2,
+            background: 'rgba(255,255,255,0.15)',
+            backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
+            borderRadius: 20, padding: '4px 14px', marginBottom: 16,
+            color: 'rgba(255,255,255,0.9)', fontSize: 12, letterSpacing: 2, fontWeight: 500,
           }}>
             <SendOutlined />  CONTRIBUTE YOUR STORY
           </div>
-          <h1 style={{ color: '#fff', fontSize: 40, fontWeight: 900, margin: '0 0 12px', lineHeight: 1.2 }}>
-            文稿征集
-          </h1>
-          <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: 15, lineHeight: 1.8, margin: '0', maxWidth: 560, whiteSpace: 'nowrap' }}>
+          <h1 style={{ color: '#fff', fontSize: 40, fontWeight: 900, margin: '0 0 12px', lineHeight: 1.2 }}>文稿征集</h1>
+          <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: 15, lineHeight: 1.8, margin: '0', maxWidth: 560 }}>
             {config.contribute_intro}
           </p>
         </div>
@@ -110,9 +99,9 @@ export default function ContributePage() {
       {/* 正文内容 */}
       <div style={{ maxWidth: 1000, margin: '-40px auto 0', padding: '0 32px 64px', position: 'relative', zIndex: 5 }}>
 
-        {/* 供稿要求（移到最前面） */}
-        <div style={{ background: '#fff', borderRadius: 20, padding: '36px 40px', marginBottom: 20, boxShadow: '0 8px 32px rgba(0,0,0,0.06)' }}>
-          <Title level={4} style={{ margin: '0 0 24px', color: '#0f172a', fontWeight: 800 }}>供稿要求</Title>
+        {/* 供稿要求 */}
+        <div style={{ ...glassPanel, padding: '36px 40px', marginBottom: 20 }}>
+          <Title level={4} style={{ margin: '0 0 24px', color: '#1e293b', fontWeight: 800 }}>供稿要求</Title>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             {requirements.map((item, i) => (
               <div key={i} style={{
@@ -126,13 +115,13 @@ export default function ContributePage() {
           </div>
         </div>
 
-        {/* 投稿贴士 */}
+        {/* 投稿贴士 — 暖色玻璃 */}
         <div style={{
-          background: 'linear-gradient(135deg, #fffbeb, #fef3c7)',
-          border: '1px solid #fde68a',
-          borderRadius: 16,
-          padding: '20px 28px',
-          marginBottom: 20,
+          background: 'rgba(255,251,235,0.65)',
+          backdropFilter: 'blur(10px) saturate(140%)',
+          WebkitBackdropFilter: 'blur(10px) saturate(140%)',
+          border: '1px solid rgba(253,230,138,0.5)',
+          borderRadius: 16, padding: '20px 28px', marginBottom: 20,
           display: 'flex', alignItems: 'center', gap: 12,
         }}>
           <BulbOutlined style={{ fontSize: 20, color: '#f59e0b', flexShrink: 0 }} />
@@ -142,25 +131,20 @@ export default function ContributePage() {
         </div>
 
         {/* 征文主题 */}
-        <div style={{ background: '#fff', borderRadius: 20, padding: '36px 40px', marginBottom: 20, boxShadow: '0 2px 12px rgba(0,0,0,0.04)' }}>
+        <div style={{ ...glassPanel, padding: '36px 40px', marginBottom: 20 }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
-            <Title level={4} style={{ margin: 0, color: '#0f172a', fontWeight: 800 }}>征文主题</Title>
+            <Title level={4} style={{ margin: 0, color: '#1e293b', fontWeight: 800 }}>征文主题</Title>
             {posters.length > 0 && (
               <Button
                 type="primary"
                 icon={<PictureOutlined />}
                 onClick={() => setPosterModalOpen(true)}
                 style={{
-                  borderRadius: 20,
-                  background: '#fff',
-                  border: '1px solid #e2e8f0',
-                  color: '#4f6ef7',
-                  fontSize: 14,
-                  fontWeight: 700,
-                  height: 38,
-                  paddingLeft: 18,
-                  paddingRight: 18,
-                  boxShadow: '0 2px 8px rgba(79,110,247,0.15)',
+                  borderRadius: 12,
+                  background: 'linear-gradient(135deg, #4f6ef7, #6f86fa)',
+                  border: 'none', color: '#fff', fontSize: 13, fontWeight: 600, height: 38,
+                  paddingLeft: 18, paddingRight: 18,
+                  boxShadow: '0 6px 16px rgba(79,110,247,0.32), inset 0 1px 0 rgba(255,255,255,0.4)',
                 }}
               >
                 往期征稿
@@ -171,26 +155,28 @@ export default function ContributePage() {
             {topics.map((topic, i) => (
               <div key={i} style={{
                 display: 'flex', alignItems: 'flex-start', gap: 16,
-                background: '#f8fafc', borderRadius: 12, padding: '16px 20px',
-                border: '1px solid #f1f5f9',
+                background: 'rgba(255,255,255,0.45)',
+                backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)',
+                borderRadius: 12, padding: '16px 20px',
+                border: '1px solid rgba(255,255,255,0.5)',
               }}>
                 <div style={{
                   width: 36, height: 36, borderRadius: 8,
-                  background: 'rgba(79,110,247,0.08)',
+                  background: 'rgba(79,110,247,0.10)',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   flexShrink: 0,
                 }}>
                   <span style={{ fontSize: 14, fontWeight: 700, color: '#4f6ef7' }}>{(i + 1).toString().padStart(2, '0')}</span>
                 </div>
                 <div>
-                  <div style={{ fontSize: 14, fontWeight: 700, color: '#0f172a', marginBottom: 4 }}>{topic}</div>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: '#1e293b', marginBottom: 4 }}>{topic}</div>
                   <div style={{ fontSize: 13, color: '#64748b', lineHeight: 1.6 }}>{topicDescs[i] || ''}</div>
                 </div>
               </div>
             ))}
           </div>
 
-          {/* 往期征稿弹窗 — 小红书风格 */}
+          {/* 往期征稿弹窗 */}
           <Modal
             open={posterModalOpen}
             onCancel={() => setPosterModalOpen(false)}
@@ -200,69 +186,43 @@ export default function ContributePage() {
             styles={{ body: { padding: '28px 24px', maxHeight: '78vh', overflowY: 'auto' } }}
           >
             <div style={{ textAlign: 'center', marginBottom: 24 }}>
-              <h3 style={{ margin: 0, fontSize: 22, fontWeight: 800, color: '#0f172a' }}>往期征稿</h3>
-              <p style={{ margin: '6px 0 0', color: '#94a3b8', fontSize: 13 }}>历次文稿征集活动精彩回顾</p>
+              <h3 style={{ margin: 0, fontSize: 22, fontWeight: 800, color: '#1e293b' }}>往期征稿</h3>
+              <p style={{ margin: '6px 0 0', color: '#64748b', fontSize: 13 }}>历次文稿征集活动精彩回顾</p>
             </div>
-
             {posters.length > 0 ? (
-              /* 小红书瀑布流 */
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(2, 1fr)',
-                gap: 18,
-              }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 18 }}>
                 {posters.map((item, idx) => (
-                  <div
-                    key={idx}
-                    style={{
-                      background: '#fff',
-                      borderRadius: 12,
-                      overflow: 'hidden',
-                      border: '1px solid #f1f5f9',
-                      cursor: 'pointer',
-                      transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-                    }}
+                  <div key={idx} style={{
+                    background: 'rgba(255,255,255,0.48)',
+                    backdropFilter: 'blur(10px) saturate(140%)',
+                    WebkitBackdropFilter: 'blur(10px) saturate(140%)',
+                    borderRadius: 16, overflow: 'hidden',
+                    border: '1px solid rgba(255,255,255,0.6)',
+                    cursor: 'pointer',
+                    transition: 'transform 0.28s cubic-bezier(0.32,0.72,0,1), box-shadow 0.28s',
+                    boxShadow: '0 4px 12px rgba(15,23,42,0.04), inset 0 1px 0 rgba(255,255,255,0.6)',
+                  }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'translateY(-4px)'
-                      e.currentTarget.style.boxShadow = '0 12px 32px rgba(0,0,0,0.10)'
+                      e.currentTarget.style.transform = 'translateY(-4px) scale(1.01)'
+                      e.currentTarget.style.boxShadow = '0 16px 36px rgba(15,23,42,0.12), inset 0 1px 0 rgba(255,255,255,0.7)'
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = 'translateY(0)'
-                      e.currentTarget.style.boxShadow = 'none'
+                      e.currentTarget.style.transform = 'translateY(0) scale(1)'
+                      e.currentTarget.style.boxShadow = '0 4px 12px rgba(15,23,42,0.04), inset 0 1px 0 rgba(255,255,255,0.6)'
                     }}
                   >
-                    {/* 图片区 */}
-                    <div style={{
-                      width: '100%',
-                      height: 320,
-                      overflow: 'hidden',
-                      background: '#f8fafc',
-                    }}>
-                      <Image
-                        src={item.url}
-                        alt={item.title || `征稿海报 ${idx + 1}`}
+                    <div style={{ width: '100%', height: 320, overflow: 'hidden', background: 'transparent' }}>
+                      <Image src={item.url} alt={item.title || `征稿海报 ${idx + 1}`}
                         style={{ width: '100%', height: '100%', objectFit: 'contain' }}
                         preview={true}
                         fallback="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='500'%3E%3Crect fill='%23f1f5f9' width='100%25' height='100%25'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%23cbd5e1' font-size='14'%3E加载中...%3C/text%3E%3C/svg%3E"
                       />
                     </div>
-                    {/* 标题区 */}
                     {item.title && (
-                      <div style={{
-                        padding: '12px 14px 14px',
-                      }}>
-                        <div style={{
-                          fontSize: 13.5,
-                          fontWeight: 600,
-                          color: '#1e293b',
-                          lineHeight: 1.5,
-                          display: '-webkit-box',
-                          WebkitLineClamp: 2,
-                          WebkitBoxOrient: 'vertical',
-                          overflow: 'hidden',
-                        }}>
-                          {item.title}
-                        </div>
+                      <div style={{ padding: '12px 14px 14px' }}>
+                        <div style={{ fontSize: 13.5, fontWeight: 600, color: '#1e293b', lineHeight: 1.5,
+                          display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
+                        }}>{item.title}</div>
                       </div>
                     )}
                   </div>
@@ -275,29 +235,29 @@ export default function ContributePage() {
         </div>
 
         {/* 供稿激励 */}
-        <div style={{ background: '#fff', borderRadius: 20, padding: '36px 40px', marginBottom: 20, boxShadow: '0 2px 12px rgba(0,0,0,0.04)' }}>
-          <Title level={4} style={{ margin: '0 0 24px', color: '#0f172a', fontWeight: 800 }}>供稿激励</Title>
+        <div style={{ ...glassPanel, padding: '36px 40px', marginBottom: 20 }}>
+          <Title level={4} style={{ margin: '0 0 24px', color: '#1e293b', fontWeight: 800 }}>供稿激励</Title>
           <div style={{ fontSize: 14, color: '#64748b', marginBottom: 20, lineHeight: 1.7 }}>
             文章经审核被采纳后，每篇好故事按评定标准给予一定的稿费和积分奖励
           </div>
-          <table style={{ width: '100%', borderCollapse: 'separate', borderSpacing: 0, borderRadius: 12, overflow: 'hidden', border: '1px solid #e2e8f0' }}>
+          <table style={{ width: '100%', borderCollapse: 'separate', borderSpacing: 0, borderRadius: 12, overflow: 'hidden', border: '1px solid rgba(226,232,240,0.5)' }}>
             <thead>
-              <tr style={{ background: '#f8fafc' }}>
-                <th style={{ padding: '14px 20px', textAlign: 'center', fontSize: 14, fontWeight: 600, color: '#64748b', borderBottom: '1px solid #e2e8f0' }}>评定结果</th>
+              <tr style={{ background: 'rgba(255,255,255,0.4)' }}>
+                <th style={{ padding: '14px 20px', textAlign: 'center', fontSize: 14, fontWeight: 600, color: '#64748b', borderBottom: '1px solid rgba(226,232,240,0.5)' }}>评定结果</th>
                 {ratings.map((r, i) => (
-                  <th key={i} style={{ padding: '14px 20px', textAlign: 'center', fontSize: 14, fontWeight: 700, color: '#0f172a', background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>{r.grade}</th>
+                  <th key={i} style={{ padding: '14px 20px', textAlign: 'center', fontSize: 14, fontWeight: 700, color: '#1e293b', borderBottom: '1px solid rgba(226,232,240,0.5)' }}>{r.grade}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td style={{ padding: '14px 20px', textAlign: 'center', fontSize: 14, fontWeight: 600, color: '#64748b', borderBottom: '1px solid #e2e8f0', background: '#f8fafc' }}>稿费标准</td>
+                <td style={{ padding: '14px 20px', textAlign: 'center', fontSize: 14, fontWeight: 600, color: '#64748b', borderBottom: '1px solid rgba(226,232,240,0.3)', background: 'rgba(255,255,255,0.3)' }}>稿费标准</td>
                 {ratings.map((r, i) => (
                   <td key={i} style={{ padding: '14px 20px', textAlign: 'center', fontSize: 15, fontWeight: 700, color: '#1e293b' }}>{r.reward}</td>
                 ))}
               </tr>
               <tr>
-                <td style={{ padding: '14px 20px', textAlign: 'center', fontSize: 14, fontWeight: 600, color: '#64748b', background: '#f8fafc' }}>个人积分</td>
+                <td style={{ padding: '14px 20px', textAlign: 'center', fontSize: 14, fontWeight: 600, color: '#64748b', background: 'rgba(255,255,255,0.3)' }}>个人积分</td>
                 {ratings.map((r, i) => (
                   <td key={i} style={{ padding: '14px 20px', textAlign: 'center', fontSize: 15, fontWeight: 700, color: '#1e293b' }}>{r.points}</td>
                 ))}

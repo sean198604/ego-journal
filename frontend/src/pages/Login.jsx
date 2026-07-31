@@ -29,29 +29,34 @@ export default function LoginPage() {
   return (
     <div style={{
       minHeight: '100vh',
-      background: 'linear-gradient(135deg, #f4f7fb 0%, #e8ecf2 100%)',
+      background: 'transparent',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
       padding: 24,
     }}>
       <Card
         style={{
-          width: 400, borderRadius: 20,
-          boxShadow: '0 20px 60px rgba(79,110,247,0.12)',
-          border: '1px solid #e8ecf2',
+          width: 400, borderRadius: 26,
+          background: 'rgba(255,255,255,0.72)',
+          backdropFilter: 'blur(34px) saturate(180%)',
+          WebkitBackdropFilter: 'blur(34px) saturate(180%)',
+          border: '1px solid rgba(255,255,255,0.6)',
+          boxShadow: '0 30px 60px rgba(15,23,42,0.18), inset 0 1px 0 rgba(255,255,255,0.6)',
         }}
         bodyStyle={{ padding: '40px 36px' }}
       >
         {/* Logo */}
         <div style={{ textAlign: 'center', marginBottom: 36 }}>
           <div style={{
-            width: 56, height: 56, borderRadius: 16, margin: '0 auto 16px',
+            width: 56, height: 56, borderRadius: 14,
+            margin: '0 auto 16px',
             background: 'linear-gradient(135deg, #4f6ef7, #818cf8)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
+            boxShadow: '0 8px 24px rgba(79,110,247,0.32), inset 0 1px 0 rgba(255,255,255,0.4)',
           }}>
             <ReadOutlined style={{ fontSize: 26, color: '#fff' }} />
           </div>
-          <Title level={3} style={{ margin: 0, color: '#0f172a' }}>EGO Journal</Title>
-          <Text style={{ color: '#94a3b8', fontSize: 13 }}>企业内刊管理平台</Text>
+          <Title level={3} style={{ margin: 0, color: '#1e293b' }}>EGO Journal</Title>
+          <Text style={{ color: '#64748b', fontSize: 13 }}>企业内刊管理平台</Text>
         </div>
 
         <Form layout="vertical" onFinish={onFinish} autoComplete="off">
@@ -60,7 +65,7 @@ export default function LoginPage() {
               prefix={<UserOutlined style={{ color: '#94a3b8' }} />}
               placeholder="用户名"
               size="large"
-              style={{ borderRadius: 10, height: 48 }}
+              style={{ borderRadius: 12, height: 48 }}
             />
           </Form.Item>
           <Form.Item name="password" rules={[{ required: true, message: '请输入密码' }]}>
@@ -68,7 +73,7 @@ export default function LoginPage() {
               prefix={<LockOutlined style={{ color: '#94a3b8' }} />}
               placeholder="密码"
               size="large"
-              style={{ borderRadius: 10, height: 48 }}
+              style={{ borderRadius: 12, height: 48 }}
             />
           </Form.Item>
           <Form.Item style={{ marginBottom: 0 }}>
@@ -79,9 +84,10 @@ export default function LoginPage() {
               loading={loading}
               size="large"
               style={{
-                borderRadius: 10, height: 48, fontWeight: 600,
-                background: 'linear-gradient(135deg, #4f6ef7, #818cf8)',
+                borderRadius: 12, height: 48, fontWeight: 600,
+                background: 'linear-gradient(135deg, #4f6ef7, #6f86fa)',
                 border: 'none',
+                boxShadow: '0 6px 16px rgba(79,110,247,0.32), inset 0 1px 0 rgba(255,255,255,0.4)',
               }}
             >
               登录
