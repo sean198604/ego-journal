@@ -161,15 +161,17 @@ export default function AppLayout() {
             <>
               <Button
                 onClick={() => navigate('/contribute')}
+                icon={<SendOutlined />}
                 style={{
+                  height: 34, lineHeight: '32px', fontSize: 14, fontWeight: 600,
                   background: 'rgba(255,255,255,0.55)',
-                  backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)',
+                  backdropFilter: 'blur(10px) saturate(160%)',
+                  WebkitBackdropFilter: 'blur(10px) saturate(160%)',
                   color: '#475569', border: '1px solid rgba(255,255,255,0.7)',
-                  borderRadius: 12, fontWeight: 600,
+                  borderRadius: 12, padding: '0 16px',
                   boxShadow: '0 6px 22px rgba(15,23,42,0.06), inset 0 1px 0 rgba(255,255,255,0.7)',
                   transition: 'all 0.22s cubic-bezier(0.32, 0.72, 0, 1)',
                 }}
-                icon={<SendOutlined />}
                 onMouseEnter={e => {
                   e.currentTarget.style.color = '#4f6ef7'
                   e.currentTarget.style.borderColor = 'rgba(79,110,247,0.4)'
@@ -185,12 +187,21 @@ export default function AppLayout() {
               </Button>
               <Button
                 type="primary"
-                size="small"
                 onClick={() => navigate('/login')}
                 style={{
+                  height: 34, lineHeight: '32px', fontSize: 14, fontWeight: 600,
                   background: 'linear-gradient(135deg, #4f6ef7, #6f86fa)',
-                  border: 'none', borderRadius: 12,
+                  border: 'none', borderRadius: 12, padding: '0 16px',
                   boxShadow: '0 6px 16px rgba(79,110,247,0.32), inset 0 1px 0 rgba(255,255,255,0.4)',
+                  transition: 'transform 0.22s cubic-bezier(0.32, 0.72, 0, 1), box-shadow 0.22s',
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.transform = 'translateY(-1px)'
+                  e.currentTarget.style.boxShadow = '0 8px 20px rgba(79,110,247,0.4), inset 0 1px 0 rgba(255,255,255,0.5)'
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.transform = 'translateY(0)'
+                  e.currentTarget.style.boxShadow = '0 6px 16px rgba(79,110,247,0.32), inset 0 1px 0 rgba(255,255,255,0.4)'
                 }}
               >
                 登录

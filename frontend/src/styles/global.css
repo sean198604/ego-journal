@@ -284,6 +284,8 @@ body {
 .ant-input,
 .ant-select-selector,
 .ant-picker {
+  font-size: 14px;
+  padding: 11px 14px;
   background: rgba(255, 255, 255, 0.6) !important;
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
@@ -301,6 +303,8 @@ body {
   background: rgba(255, 255, 255, 0.85) !important;
 }
 .ant-form-item-label > label {
+  font-size: 13px;
+  font-weight: 600;
   color: var(--text-sub) !important;
 }
 
@@ -381,9 +385,19 @@ body {
 
 /* 按钮覆盖 — 保持 AntD 结构但改外观 */
 .ant-btn {
+  height: 34px;
+  line-height: 32px;
+  font-size: 14px;
+  padding: 0 16px;
   border-radius: 12px !important;
   font-weight: 600 !important;
   transition: all 0.22s var(--spring) !important;
+}
+.ant-btn-sm {
+  height: 30px;
+  line-height: 28px;
+  font-size: 13px;
+  padding: 0 12px;
 }
 .ant-btn-primary {
   background: linear-gradient(135deg, #4f6ef7, #6f86fa) !important;
@@ -400,8 +414,8 @@ body {
 }
 .ant-btn-default {
   background: rgba(255, 255, 255, 0.55) !important;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px) saturate(160%);
+  -webkit-backdrop-filter: blur(10px) saturate(160%);
   color: var(--text-sub) !important;
   border: 1px solid rgba(255, 255, 255, 0.7) !important;
   box-shadow: var(--glass-shadow) !important;
