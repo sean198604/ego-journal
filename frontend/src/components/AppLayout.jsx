@@ -31,8 +31,8 @@ export default function AppLayout() {
   const navRef = useRef(null)
   const itemRefs = useRef({})
 
-  // 滑块指示器位置
-  const [sliderStyle, setSliderStyle] = useState({ left: 0, width: 0, opacity: 0 })
+  // 滑动 pill 位置
+  const [pillStyle, setPillStyle] = useState({ left: 0, width: 0, opacity: 0 })
 
   // 滚动时给顶栏加玻璃效果
   useEffect(() => {
@@ -45,8 +45,8 @@ export default function AppLayout() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  // 计算滑块位置
-  const updateSlider = useCallback(() => {
+  // 计算滑动 pill 位置
+  const updatePill = useCallback(() => {
     const activeKey = NAV_ITEMS.find(item => {
       if (item.key === '/') return location.pathname === '/'
       return location.pathname.startsWith(item.key)
@@ -56,7 +56,7 @@ export default function AppLayout() {
     if (el && nav) {
       const navRect = nav.getBoundingClientRect()
       const elRect = el.getBoundingClientRect()
-      setSliderStyle({
+      setPillStyle({
         left: elRect.left - navRect.left,
         width: elRect.width,
         opacity: 1,
@@ -65,12 +65,10 @@ export default function AppLayout() {
   }, [location.pathname])
 
   useLayoutEffect(() => {
-    // 首次 + 路由变化时更新
-    updateSlider()
-    // 监听 resize 以处理窗口变化
-    window.addEventListener('resize', updateSlider)
-    return () => window.removeEventListener('resize', updateSlider)
-  }, [updateSlider])
+    updatePill()
+    window.addEventListener('resize', updatePill)
+    return () => window.removeEventListener('resize', updatePill)
+  }, [updatePill])
 
   const userMenuItems = [
     ...(user?.role === 'admin' || user?.role === 'editor' ? [{
@@ -101,7 +99,7 @@ export default function AppLayout() {
           padding: '0 32px', height: 64,
         }}
       >
-        {/* Logo & 品牌 — 36x36 渐变方块 + 彩色投影 */}
+        {/* Logo & 品牌 */}
         <div
           style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer', flexShrink: 0 }}
           onClick={() => navigate('/')}
@@ -125,21 +123,27 @@ export default function AppLayout() {
           </div>
         </div>
 
-        {/* 中间导航 — 胶囊 pill 风格 + 滑动指示器 */}
+        {/* 中间导航 — 滑��� pill 分段控件 */}
         <div
           ref={navRef}
-          style={{ display: 'flex', alignItems: 'center', gap: 4, flexShrink: 0, position: 'relative' }}
+          style={{
+            display: 'flex', alignItems: 'center', gap: 4, flexShrink: 0,
+            position: 'relative', background: 'rgba(15,23,42,0.04)',
+            borderRadius: 12, padding: 3,
+          }}
         >
-          {/* 滑动滑块指示器 */}
+          {/* 滑动 pill 背景 */}
           <div style={{
-            position: 'absolute', bottom: 2, left: sliderStyle.left,
-            width: sliderStyle.width, height: 2.5,
-            background: 'linear-gradient(90deg, #4f6ef7, #818cf8)',
-            borderRadius: 2,
-            opacity: sliderStyle.opacity,
-            transition: 'left 0.35s cubic-bezier(0.32, 0.72, 0, 1), width 0.35s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.15s',
+            position: 'absolute', top: 3, left: pillStyle.left,
+            width: pillStyle.width, height: 'calc(100% - 6px)',
+            background: 'rgba(255,255,255,0.85)',
+            backdropFilter: 'blur(10px) saturate(160%)',
+            WebkitBackdropFilter: 'blur(10px) saturate(160%)',
+            borderRadius: 10,
+            opacity: pillStyle.opacity,
+            boxShadow: '0 3px 10px rgba(15,23,42,0.06), inset 0 1px 0 rgba(255,255,255,0.8)',
+            transition: 'left 0.38s cubic-bezier(0.32, 0.72, 0, 1), width 0.38s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.18s',
             pointerEvents: 'none',
-            zIndex: 1,
           }} />
           {NAV_ITEMS.map(item => {
             const isActive = item.key === '/'
@@ -152,25 +156,20 @@ export default function AppLayout() {
                 ref={el => { itemRefs.current[item.key] = el }}
                 onClick={() => navigate(item.key)}
                 style={{
+                  position: 'relative', zIndex: 1,
                   display: 'flex', alignItems: 'center', gap: 6,
-                  padding: '7px 16px', borderRadius: 12, cursor: 'pointer',
+                  padding: '7px 16px', borderRadius: 10, cursor: 'pointer',
                   fontSize: 14, fontWeight: isActive ? 700 : 500,
                   color: isActive ? '#4f6ef7' : '#64748b',
-                  background: isActive ? 'rgba(79,110,247,0.08)' : 'transparent',
-                  transition: 'all 0.22s cubic-bezier(0.32, 0.72, 0, 1)',
-                  whiteSpace: 'nowrap', position: 'relative',
+                  background: 'transparent',
+                  transition: 'color 0.25s cubic-bezier(0.32, 0.72, 0, 1), font-weight 0.25s',
+                  whiteSpace: 'nowrap',
                 }}
                 onMouseEnter={e => {
-                  if (!isActive) {
-                    e.currentTarget.style.color = '#4f6ef7'
-                    e.currentTarget.style.background = 'rgba(79,110,247,0.06)'
-                  }
+                  if (!isActive) e.currentTarget.style.color = '#4f6ef7'
                 }}
                 onMouseLeave={e => {
-                  if (!isActive) {
-                    e.currentTarget.style.color = '#64748b'
-                    e.currentTarget.style.background = 'transparent'
-                  }
+                  if (!isActive) e.currentTarget.style.color = '#64748b'
                 }}
               >
                 {item.icon}
@@ -210,12 +209,12 @@ export default function AppLayout() {
                 onClick={() => navigate('/contribute')}
                 icon={<SendOutlined />}
                 style={{
-                  height: 34, lineHeight: '32px', fontSize: 14, fontWeight: 600,
+                  height: 34, fontSize: 14, fontWeight: 600,
                   background: 'rgba(255,255,255,0.55)',
                   backdropFilter: 'blur(10px) saturate(160%)',
                   WebkitBackdropFilter: 'blur(10px) saturate(160%)',
                   color: '#475569', border: '1px solid rgba(255,255,255,0.7)',
-                  borderRadius: 12, padding: '0 16px',
+                  borderRadius: 12, padding: '0 16px', gap: 6,
                   boxShadow: '0 6px 22px rgba(15,23,42,0.06), inset 0 1px 0 rgba(255,255,255,0.7)',
                   transition: 'all 0.22s cubic-bezier(0.32, 0.72, 0, 1)',
                 }}
@@ -259,9 +258,14 @@ export default function AppLayout() {
         </Space>
       </Header>
 
-      {/* 内容区 */}
+      {/* 内容区 — 页面切换淡入上浮动画 */}
       <Content style={{ flex: 1 }}>
-        <Outlet />
+        <div
+          key={location.pathname}
+          style={{ minHeight: '100%', animation: 'viewFade 0.38s cubic-bezier(0.32, 0.72, 0, 1) both' }}
+        >
+          <Outlet />
+        </div>
       </Content>
 
       {/* 底部 — 玻璃质感 */}
