@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState, useLayoutEffect, useCallback } from 'react'
 import { Layout, Button, Space, Dropdown, Avatar, Typography } from 'antd'
 import { Outlet, useNavigate, useLocation } from 'react-router-dom'
 import {
@@ -28,6 +28,11 @@ export default function AppLayout() {
   const location = useLocation()
   const { user, token, logout } = useAuthStore()
   const headerRef = useRef(null)
+  const navRef = useRef(null)
+  const itemRefs = useRef({})
+
+  // 滑块指示器位置
+  const [sliderStyle, setSliderStyle] = useState({ left: 0, width: 0, opacity: 0 })
 
   // 滚动时给顶栏加玻璃效果
   useEffect(() => {
@@ -39,6 +44,33 @@ export default function AppLayout() {
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
+
+  // 计算滑块位置
+  const updateSlider = useCallback(() => {
+    const activeKey = NAV_ITEMS.find(item => {
+      if (item.key === '/') return location.pathname === '/'
+      return location.pathname.startsWith(item.key)
+    })?.key || '/'
+    const el = itemRefs.current[activeKey]
+    const nav = navRef.current
+    if (el && nav) {
+      const navRect = nav.getBoundingClientRect()
+      const elRect = el.getBoundingClientRect()
+      setSliderStyle({
+        left: elRect.left - navRect.left,
+        width: elRect.width,
+        opacity: 1,
+      })
+    }
+  }, [location.pathname])
+
+  useLayoutEffect(() => {
+    // 首次 + 路由变化时更新
+    updateSlider()
+    // 监听 resize 以处理窗口变化
+    window.addEventListener('resize', updateSlider)
+    return () => window.removeEventListener('resize', updateSlider)
+  }, [updateSlider])
 
   const userMenuItems = [
     ...(user?.role === 'admin' || user?.role === 'editor' ? [{
@@ -93,8 +125,22 @@ export default function AppLayout() {
           </div>
         </div>
 
-        {/* 中间导航 — 胶囊 pill 风格 */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 4, flexShrink: 0 }}>
+        {/* 中间导航 — 胶囊 pill 风格 + 滑动指示器 */}
+        <div
+          ref={navRef}
+          style={{ display: 'flex', alignItems: 'center', gap: 4, flexShrink: 0, position: 'relative' }}
+        >
+          {/* 滑动滑块指示器 */}
+          <div style={{
+            position: 'absolute', bottom: 2, left: sliderStyle.left,
+            width: sliderStyle.width, height: 2.5,
+            background: 'linear-gradient(90deg, #4f6ef7, #818cf8)',
+            borderRadius: 2,
+            opacity: sliderStyle.opacity,
+            transition: 'left 0.35s cubic-bezier(0.32, 0.72, 0, 1), width 0.35s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.15s',
+            pointerEvents: 'none',
+            zIndex: 1,
+          }} />
           {NAV_ITEMS.map(item => {
             const isActive = item.key === '/'
               ? location.pathname === '/'
@@ -103,6 +149,7 @@ export default function AppLayout() {
               <div
                 key={item.key}
                 className="nav-item"
+                ref={el => { itemRefs.current[item.key] = el }}
                 onClick={() => navigate(item.key)}
                 style={{
                   display: 'flex', alignItems: 'center', gap: 6,
@@ -111,7 +158,7 @@ export default function AppLayout() {
                   color: isActive ? '#4f6ef7' : '#64748b',
                   background: isActive ? 'rgba(79,110,247,0.08)' : 'transparent',
                   transition: 'all 0.22s cubic-bezier(0.32, 0.72, 0, 1)',
-                  whiteSpace: 'nowrap',
+                  whiteSpace: 'nowrap', position: 'relative',
                 }}
                 onMouseEnter={e => {
                   if (!isActive) {
