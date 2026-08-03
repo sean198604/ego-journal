@@ -189,11 +189,12 @@ export default function AppLayout() {
                 type="primary"
                 onClick={() => navigate('/login')}
                 style={{
-                  height: 34, lineHeight: '32px', fontSize: 14, fontWeight: 600,
+                  height: 34, fontSize: 14, fontWeight: 600,
                   background: 'linear-gradient(135deg, #4f6ef7, #6f86fa)',
-                  border: 'none', borderRadius: 12, padding: '0 16px',
+                  border: '1px solid transparent', borderRadius: 12, padding: '0 16px',
+                  color: '#fff', gap: 6,
                   boxShadow: '0 6px 16px rgba(79,110,247,0.32), inset 0 1px 0 rgba(255,255,255,0.4)',
-                  transition: 'transform 0.22s cubic-bezier(0.32, 0.72, 0, 1), box-shadow 0.22s',
+                  transition: 'all 0.22s cubic-bezier(0.32, 0.72, 0, 1)',
                 }}
                 onMouseEnter={e => {
                   e.currentTarget.style.transform = 'translateY(-1px)'
