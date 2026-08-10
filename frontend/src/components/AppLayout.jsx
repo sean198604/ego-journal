@@ -123,7 +123,7 @@ export default function AppLayout() {
           </div>
         </div>
 
-        {/* 中间导航 — 滑��� pill 分段控件 */}
+        {/* 中间导航 — 滑动 pill 分段控件 */}
         <div
           ref={navRef}
           style={{

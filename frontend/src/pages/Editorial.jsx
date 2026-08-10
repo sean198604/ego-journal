@@ -202,7 +202,7 @@ export default function EditorialPage() {
       {/* 正文内容 */}
       <div className="editorial-content" style={{ maxWidth: 1000, margin: '-40px auto 0', padding: '0 32px 64px', position: 'relative', zIndex: 5 }}>
 
-        {/* 核心团队 — 玻璃面��� */}
+        {/* 核心团队 — 玻璃面板 */}
         <div className="editorial-core-card" style={{ ...glassPanel, padding: '32px 36px', marginBottom: 24 }}>
           <div style={{ marginBottom: 20 }}>
             <Title level={4} style={{ margin: '0 0 6px', color: '#1e293b', fontWeight: 800 }}>核心编辑团队</Title>

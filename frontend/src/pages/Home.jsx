@@ -129,7 +129,7 @@ const INFO_CARDS = [
   {
     key: 'contribute', path: '/contribute',
     title: '文稿征集', tag: '投稿', color: '#f59e0b',
-    desc: '欢迎全体同仁投稿，分享工作心得、生活故事、团队风采，让你的声音出现在《众瀚四��》。',
+    desc: '欢迎全体同仁投稿，分享工作心得、生活故事、团队风采，让你的声音出现在《众瀚四季》。',
   },
 ]
 
@@ -367,7 +367,7 @@ export default function HomePage() {
           <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 28 }}>
             <div>
               <Title level={3} style={{ margin: 0, color: '#1e293b', fontWeight: 800 }}>往期内刊</Title>
-              <div style={{ fontSize: 13, color: '#64748b', marginTop: 2 }}>每��期都是一段值得珍藏的记忆</div>
+              <div style={{ fontSize: 13, color: '#64748b', marginTop: 2 }}>每一期都是一段值得珍藏的记忆</div>
             </div>
             <div style={{ flex: 1, height: 1, background: 'rgba(226,232,240,0.5)', marginLeft: 8 }} />
             {!loading && journals.length > 0 && (
