@@ -1,3 +1,5 @@
+<p align="center"><img src="assets/readme-cover.png" alt="EGO Journal project cover" width="100%" /></p>
+
 # EGO《众瀚四季》企业内刊平台
 
 > **众瀚国贸** · 企业文化系列 · 内部期刊展示系统
