@@ -226,9 +226,9 @@ docker-compose up -d            # 启动全部
 
 ### 访问地址
 
-- 前台首页：http://192.168.1.246:7007
-- 管理后台：http://192.168.1.246:7007/admin
-- 后端 API：http://192.168.1.246:8002/api/health
+- 前台首页：`http://localhost:7007`
+- 管理后台：`http://localhost:7007/admin`
+- 后端 API：`http://localhost:8002/api/health`
 
 ---
 
